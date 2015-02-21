@@ -1,0 +1,210 @@
+file /home/evan/Documents/FeynmanPowder/SConscript,line 381:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking whether the C compiler works
+.sconf_temp/conftest_0.c <-
+  |
+  |int main()
+  |{
+  |    return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_0.o -c -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_0.c
+scons: Configure: yes
+
+scons: Configure: Checking whether the C++ compiler works
+.sconf_temp/conftest_1.cpp <-
+  |
+  |int main()
+  |{
+  |    return 0;
+  |}
+  |
+g++ -o .sconf_temp/conftest_1.o -c -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_1.cpp
+scons: Configure: yes
+
+scons: Configure: Checking if 64 bit... 
+.sconf_temp/conftest_2.c <-
+  |#include <stdlib.h>
+  |	#include <stdio.h>
+  |	int main() {
+  |	    printf("%d", (int)sizeof(size_t));
+  |	    return 0;
+  |	}
+  |	
+gcc -o .sconf_temp/conftest_2.o -c -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_2.c
+.sconf_temp/conftest_3.c <-
+  |#include <stdlib.h>
+  |	#include <stdio.h>
+  |	int main() {
+  |	    printf("%d", (int)sizeof(size_t));
+  |	    return 0;
+  |	}
+  |	
+gcc -o .sconf_temp/conftest_3.o -c -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_3.c
+gcc -o .sconf_temp/conftest_3 .sconf_temp/conftest_3.o
+.sconf_temp/conftest_3 > .sconf_temp/conftest_3.out
+scons: Configure: yes
+
+scons: Configure: Checking for C library SDL... 
+.sconf_temp/conftest_4.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_4.o -c -D_64BIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_4.c
+gcc -o .sconf_temp/conftest_4 .sconf_temp/conftest_4.o -lSDL
+scons: Configure: yes
+
+scons: Configure: Checking for C header file SDL.h... 
+.sconf_temp/conftest_5.c <-
+  |
+  |#include "SDL.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_5.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL .sconf_temp/conftest_5.c
+scons: Configure: yes
+
+scons: Configure: Checking for C library libluajit-5.1... 
+.sconf_temp/conftest_6.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_6.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL .sconf_temp/conftest_6.c
+gcc -o .sconf_temp/conftest_6 .sconf_temp/conftest_6.o -L/usr/lib/x86_64-linux-gnu -lSDL -lluajit-5.1
+scons: Configure: yes
+
+scons: Configure: Checking for C header file luajit.h... 
+.sconf_temp/conftest_7.c <-
+  |
+  |#include "luajit.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_7.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_7.c
+scons: Configure: yes
+
+scons: Configure: Checking for C library fftw3f... 
+.sconf_temp/conftest_8.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_8.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_8.c
+gcc -o .sconf_temp/conftest_8 .sconf_temp/conftest_8.o -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lSDL -lluajit-5.1 -lluajit-5.1 -lfftw3f
+scons: Configure: yes
+
+scons: Configure: Checking for C library bz2... 
+.sconf_temp/conftest_9.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_9.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_9.c
+gcc -o .sconf_temp/conftest_9 .sconf_temp/conftest_9.o -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lSDL -lluajit-5.1 -lluajit-5.1 -lfftw3f -lbz2
+scons: Configure: yes
+
+scons: Configure: Checking for C header file bzlib.h... 
+.sconf_temp/conftest_10.c <-
+  |
+  |#include "bzlib.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_10.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_10.c
+scons: Configure: yes
+
+scons: Configure: Checking for C library z... 
+.sconf_temp/conftest_11.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_11.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_11.c
+gcc -o .sconf_temp/conftest_11 .sconf_temp/conftest_11.o -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lSDL -lluajit-5.1 -lluajit-5.1 -lfftw3f -lbz2 -lz
+scons: Configure: yes
+
+scons: Configure: Checking for C library pthread... 
+.sconf_temp/conftest_12.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_12.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_12.c
+gcc -o .sconf_temp/conftest_12 .sconf_temp/conftest_12.o -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lSDL -lluajit-5.1 -lluajit-5.1 -lfftw3f -lbz2 -lz -lpthread
+scons: Configure: yes
+
+scons: Configure: Checking for C library m... 
+.sconf_temp/conftest_13.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_13.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_13.c
+gcc -o .sconf_temp/conftest_13 .sconf_temp/conftest_13.o -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lSDL -lluajit-5.1 -lluajit-5.1 -lfftw3f -lbz2 -lz -lpthread -lm
+scons: Configure: yes
+
+scons: Configure: Checking for C library X11... 
+.sconf_temp/conftest_14.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_14.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_14.c
+gcc -o .sconf_temp/conftest_14 .sconf_temp/conftest_14.o -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lSDL -lluajit-5.1 -lluajit-5.1 -lfftw3f -lbz2 -lz -lpthread -lm -lX11
+scons: Configure: yes
+
+scons: Configure: Checking for C library rt... 
+.sconf_temp/conftest_15.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_15.o -c -D_64BIT -D_GNU_SOURCE=1 -D_REENTRANT -DLUAJIT -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/usr/include/SDL -I/usr/local/include/luajit-2.0 .sconf_temp/conftest_15.c
+gcc -o .sconf_temp/conftest_15 .sconf_temp/conftest_15.o -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lSDL -lluajit-5.1 -lluajit-5.1 -lfftw3f -lbz2 -lz -lpthread -lm -lX11 -lrt
+scons: Configure: yes
+
+

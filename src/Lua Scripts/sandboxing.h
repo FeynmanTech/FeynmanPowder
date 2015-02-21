@@ -1,0 +1,32 @@
+#ifdef LUACONSOLE
+#ifndef sandboxing_luac
+const char* sandboxing_luac = ""
+"function _runSandbox(src)\n"
+"  local f = loadstring(src)\n"
+"--[[\n"
+"  local e = getfenv(f)\n"
+"  for i, v in pairs(env) do\n"
+"    e[v] = {}\n"
+"  end\n"
+"  setfenv(f, e)\n"
+"--]]\n"
+"  local io = nil\n"
+"  f()\n"
+"end\n"
+"\n"
+"function runSandbox(untrusted_code)\n"
+"local env = {"
+"['tpt'] = tpt, ['print'] = print,"
+"['math'] = math, ['table'] = table,"
+"['sim'] = sim,"
+"['gfx'] = gfx, ['sim'] = sim,"
+"['tonumber'] = tonumber}\n"
+"  if untrusted_code:byte(1) == 27 then return nil, 'binary bytecode prohibited' end\n"
+"  local untrusted_function, message = loadstring(untrusted_code)\n"
+"  if not untrusted_function then print(message) return nil, message end\n"
+"  setfenv(untrusted_function, env)\n"
+"  untrusted_function()\n"
+"end"
+;
+#endif
+#endif

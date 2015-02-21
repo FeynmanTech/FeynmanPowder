@@ -1,0 +1,1896 @@
+#ifdef LUACONSOLE
+
+const char* multiplayer_luac = ""
+"local ICONS_ADDED = 1\n"
+"--Cracker64's Powder Toy Multiplayer\n"
+"--I highly recommend to use my Autorun Script Manager\n"
+"local versionstring = \"0.83\"\n"
+"--TODO's\n"
+"--FIGH,STKM,STK2,LIGH need a few more creation adjustments\n"
+"--Some more server functions\n"
+"-------------------------------------------------------\n"
+"--CHANGES:\n"
+"--Lots of Fixes\n"
+"--More colors!\n"
+"--ESC key will unfocus, then minimize chat\n"
+"--Changes from jacob, including: Support jacobsMod, keyrepeat\n"
+"--Support replace mode\n"
+"local CurrentUsers\n"
+"if TPTMP then if TPTMP.version <= 2 then TPTMP.disableMultiplayer() else error(\"newer version already running\") end end local get_name = tpt.get_name -- if script already running, replace it\n"
+"TPTMP = {[\"version\"] = 2} -- script version sent on connect to ensure server protocol is the same\n"
+"local issocket,socket = pcall(require,\"socket\")\n"
+"if not tpt.selectedreplace then error\"Tpt version not supported\" end\n"
+"local using_manager = false\n"
+"local _print = print\n"
+"if MANAGER ~= nil or MANAGER_EXISTS then\n"
+"    using_manager = true\n"
+"    _print = MANAGER and MANAGER.print or MANAGER_PRINT\n"
+"else\n"
+"    _print = print\n"
+"end\n"
+"local hooks_enabled = false --hooks only enabled once you maximize the button\n"
+"local PORT = 34403 --Change 34403 to your desired port\n"
+"local KEYBOARD = 1 --only change if you have issues. Only other option right now is 2(finnish).\n"
+"--Local player vars we need to keep\n"
+"local L = {mousex=0, mousey=0, brushx=0, brushy=0, sell=1, sela=296, selr=0, selrep=0, replacemode = 0, mButt=0, mEvent=0, dcolour=0, stick2=false, chatHidden=true, flashChat=false,\n"
+"shift=false, alt=false, ctrl=false, tabs = false, z=false, downInside=nil, skipClick=false, pauseNextFrame=false, copying=false, stamp=false, placeStamp=false, lastStamp=nil, lastCopy=nil, smoved=false, rotate=false, sendScreen=false}\n"
+"local tptversion = tpt.version.build\n"
+"local jacobsmod = tpt.version.jacob1s_mod~=nil\n"
+"math.randomseed(os.time())\n"
+"local username = get_name()\n"
+"if username == \"\" then\n"
+"    username = \"Guest\"..math.random(10000,99999)\n"
+"end\n"
+"local chatwindow\n"
+"local ChosenIP, ChosenPort\n"
+"local isAFK = false\n"
+"local CurrentNick = ''\n"
+"local MultiPrefs = ''\n"
+"local f = io.open('multiplayer.pref', 'r')\n"
+"if f then\n"
+"	MultiPrefs = f:read('*all')\n"
+"end\n"
+"local mpList = {}\n"
+"for p, c in MultiPrefs:gmatch('([^%=]+)=([^;]+);') do\n"
+"	mpList[p] = c\n"
+"end\n"
+"local function mpAdd(p, d)\n"
+"	if mpList[p] then\n"
+"		MultiPrefs = MultiPrefs:sub(1, MultiPrefs:find(p .. '=') - 1) .. p .. '=' .. d .. ';' .. MultiPrefs:sub(MultiPrefs:find(';', MultiPrefs:find(p .. '=') + 2) + 1, -1)\n"
+"	else\n"
+"		MultiPrefs = MultiPrefs .. p .. '=' .. d .. ';'\n"
+"	end\n"
+"	local f = io.open('multiplayer.pref', 'w')\n"
+"	f:write(MultiPrefs)\n"
+"	mpList[p] = d\n"
+"end\n"
+"local CurrentNick = mpList['default_nick'] or username\n"
+"--return table of arguments\n"
+"local function getArgs(msg)\n"
+"    if not msg then return {} end\n"
+"    local args = {}\n"
+"    for word in msg:gmatch(\"([^%s%c]+)\") do\n"
+"    table.insert(args,word)\n"
+"    end\n"
+"    return args\n"
+"end\n"
+"local function parseAndSend(text, self)\n"
+"    local cmd = text:match(\"^/([^%s]+)\")\n"
+"    if cmd then\n"
+"        local msg=text:sub(#cmd+3)\n"
+"        local args = getArgs(msg)\n"
+"        if chatcommands[cmd] then\n"
+"            chatcommands[cmd](self,msg,args)\n"
+"            --self:addline(\"Executed \"..cmd..\" \"..rest)\n"
+"            return\n"
+"        end\n"
+"    end\n"
+"    --normal chat\n"
+"    if con.connected then\n"
+"        conSend(19,text,true)\n"
+"        chatwindow:addline(username .. \": \".. text,200,200,200)\n"
+"    else\n"
+"        chatwindow:addline(\"Not connected to server!\",255,50,50)\n"
+"    end\n"
+"end\n"
+"local CurrentChannel = 'null'\n"
+"local con = {connected = false,\n"
+"         socket = nil,\n"
+"         members = nil,\n"
+"         pingTime = os.time()+60}\n"
+"local function conSend(cmd,msg,endNull)\n"
+"    if not con.connected then return false,\"Not connected\" end\n"
+"    msg = msg or \"\"\n"
+"    if endNull then msg = msg..\"\\0\" end\n"
+"    if cmd then msg = string.char(cmd)..msg end\n"
+"    --print(\"sent \"..msg)\n"
+"    con.socket:settimeout(10)\n"
+"    con.socket:send(msg)\n"
+"    con.socket:settimeout(0)\n"
+"end\n"
+"local function parseAndSend(text, self)\n"
+"    local cmd = text:match(\"^/([^%s]+)\")\n"
+"    if cmd then\n"
+"        local msg=text:sub(#cmd+3)\n"
+"        local args = getArgs(msg)\n"
+"        if chatcommands[cmd] then\n"
+"            chatcommands[cmd](self,msg,args)\n"
+"            --self:addline(\"Executed \"..cmd..\" \"..rest)\n"
+"            return\n"
+"        end\n"
+"    end\n"
+"    --normal chat\n"
+"    if con.connected then\n"
+"        conSend(19,text,true)\n"
+"        chatwindow:addline(username .. \": \".. text,200,200,200)\n"
+"    else\n"
+"        chatwindow:addline(\"Not connected to server!\",255,50,50)\n"
+"    end\n"
+"end\n"
+"mpapi = {}\n"
+"local api = {}\n"
+"api.lastsent = -1\n"
+"mpapi.send = function(message)\n"
+"	if os.clock() - api.lastsent > 1 then\n"
+"		chatwindow:addline(\"API:\", 255, 128, 50)\n"
+"		parseAndSend(tostring(message), chatwindow)\n"
+"		api.lastsent = os.clock()\n"
+"	else\n"
+"		chatwindow:addline(\"Message not sent - possible spam\", 255, 50, 50)\n"
+"	end\n"
+"end\n"
+"mpapi.conSend = conSend\n"
+"mpapi.chatbuffer = \"\"\n"
+"local function joinChannel(chan)\n"
+"    conSend(16,chan,true)\n"
+"    --send some things to new channel\n"
+"    conSend(34,string.char(L.brushx,L.brushy))\n"
+"    conSend(37,string.char(math.floor(L.sell/256),L.sell%256))\n"
+"    conSend(37,string.char(math.floor(64 + L.sela/256),L.sela%256))\n"
+"    conSend(37,string.char(math.floor(128 + L.selr/256),L.selr%256))\n"
+"    conSend(37,string.char(math.floor(192 + L.selrep/256),L.selrep%256))\n"
+"    conSend(38,L.replacemode)\n"
+"    conSend(65,string.char(math.floor(L.dcolour/16777216),math.floor(L.dcolour/65536)%256,math.floor(L.dcolour/256)%256,L.dcolour%256))\n"
+"end\n"
+"local function connectToServer(ip,port,nick)\n"
+"    if con.connected then return false,\"Already connected\" end\n"
+"    ip = ip or \"starcatcher.us\"\n"
+"    port = port or PORT\n"
+"    local sock = socket.tcp()\n"
+"    sock:settimeout(10)\n"
+"    local s,r = sock:connect(ip,port)\n"
+"    if not s then return false,r end\n"
+"    sock:settimeout(0)\n"
+"    sock:setoption(\"keepalive\",true)\n"
+"    sock:send(string.char(tpt.version.major)..string.char(tpt.version.minor)..string.char(TPTMP.version)..nick..\"\\0\")\n"
+"    local c,r\n"
+"    while not c do\n"
+"    c,r = sock:receive(1)\n"
+"    if not c and r~=\"timeout\" then break end\n"
+"    end\n"
+"    if not c and r~=\"timeout\" then return false,r end\n"
+"    if c~= \"\\1\" then\n"
+"    if c==\"\\0\" then\n"
+"        local err=\"\"\n"
+"        c,r = sock:receive(1)\n"
+"        while c~=\"\\0\" do\n"
+"        err = err..c\n"
+"        c,r = sock:receive(1)\n"
+"        end\n"
+"        if err==\"This nick is already on the server\" then\n"
+"            nick = nick:gsub(\"(.)$\",function(s) local n=tonumber(s) if n and n+1 <= 9 then return n+1 else return nick:sub(-1)..'0' end end)\n"
+"            return connectToServer(ip,port,nick)\n"
+"        end\n"
+"        return false,err\n"
+"    end\n"
+"    return false,\"Bad Connect\"\n"
+"    end\n"
+"    con.socket = sock\n"
+"    con.connected = true\n"
+"    username = nick\n"
+"    conSend(34,string.char(L.brushx,L.brushy))\n"
+"    conSend(37,string.char(math.floor(L.sell/256),L.sell%256))\n"
+"    conSend(37,string.char(math.floor(64 + L.sela/256),L.sela%256))\n"
+"    conSend(37,string.char(math.floor(128 + L.selr/256),L.selr%256))\n"
+"    conSend(37,string.char(math.floor(192 + L.selrep/256),L.selrep%256))\n"
+"    conSend(38,L.replacemode)\n"
+"    conSend(65,string.char(math.floor(L.dcolour/16777216),math.floor(L.dcolour/65536)%256,math.floor(L.dcolour/256)%256,L.dcolour%256))\n"
+"    conSend(19,\"/online\",true)\n"
+"    return true\n"
+"end\n"
+"local function disconnected(reason)\n"
+"    if con.socket then\n"
+"        con.socket:close()\n"
+"    end\n"
+"    con.connected = false\n"
+"    con.members = {}\n"
+"    if reason then\n"
+"        chatwindow:addline(reason,255,50,50)\n"
+"        if mpList['autoconnect'] ~= nil and mpList['autoconnect'] ~= 'false' then\n"
+"            chatwindow:addline('Reconnecting...',255,50,50)\n"
+"            connectToServer(ChosenIP, ChosenPort, CurrentNick)\n"
+"            if CurrentChannel ~= 'null' then\n"
+"                joinChannel(CurrentChannel)\n"
+"            end\n"
+"        end\n"
+"    else\n"
+"        chatwindow:addline(\"Connection was closed\",255,50,50)\n"
+"        if mpList['autoconnect'] ~= nil and mpList['autoconnect'] ~= 'false' then\n"
+"            chatwindow:addline('Reconnecting...',255,50,50)\n"
+"            connectToServer(ChosenIP, ChosenPort, CurrentNick)\n"
+"            if CurrentChannel ~= 'null' then\n"
+"                joinChannel(CurrentChannel)\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"end\n"
+"--get up to a null (\\0)\n"
+"local function conGetNull()\n"
+"    con.socket:settimeout(nil)\n"
+"    local c,r = con.socket:receive(1)\n"
+"    if not c and r ~= \"timeout\" then disconnected() return nil end\n"
+"    local rstring=\"\"\n"
+"    while c~=\"\\0\" do\n"
+"    rstring = rstring..c\n"
+"    c,r = con.socket:receive(1)\n"
+"    if not c and r ~= \"timeout\" then disconnected() return nil end\n"
+"    end\n"
+"    con.socket:settimeout(0)\n"
+"	mpapi.chatbuffer = mpapi.chatbuffer .. rstring\n"
+"    return rstring\n"
+"end\n"
+"--get next char/byte\n"
+"local function cChar()\n"
+"    con.socket:settimeout(nil)\n"
+"    local c,r = con.socket:receive(1)\n"
+"    con.socket:settimeout(0)\n"
+"    if not c then disconnected() end\n"
+"	mpapi.chatbuffer = mpapi.chatbuffer .. c\n"
+"    return c\n"
+"end\n"
+"local function cByte()\n"
+"    local byte = cChar()\n"
+"	mpapi.chatbuffer = mpapi.chatbuffer .. (byte and byte:byte() or \"\")\n"
+"    return byte and byte:byte() or nil\n"
+"end\n"
+"--get different lists for other language keyboards\n"
+"local keyboardshift = { {before=\" qwertyuiopasdfghjklzxcvbnm1234567890-=.,/`|;'[]\\\\\",after=\" QWERTYUIOPASDFGHJKLZXCVBNM!@#$%^&*()_+><?~\\\\:\\\"{}|\",},{before=\" qwertyuiopasdfghjklzxcvbnm1234567890+,.-'\337\277\337\277\337\277\337\277\337\277\337\277\337\277<\",after=\" QWERTYUIOPASDFGHJKLZXCVBNM!\\\"#\337\277\337\277\337\277\337\245&/()=?;:_*`^>\",}  }\n"
+"local keyboardaltrg = { {nil},{before=\" qwertyuiopasdfghjklzxcvbnm1234567890+,.-'\337\277\337\277\337\277\337\274\",after=\" qwertyuiopasdfghjklzxcvbnm1@\337\277\337\277\337\277\337\244\337\266{[]}\\\\,.-'~|\",},}\n"
+"local function shift(s)\n"
+"    if keyboardshift[KEYBOARD]~=nil then\n"
+"        return (s:gsub(\"(.)\",function(c)return keyboardshift[KEYBOARD][\"after\"]:sub(keyboardshift[KEYBOARD][\"before\"]:find(c,1,true))end))\n"
+"    else return s end\n"
+"end\n"
+"local function altgr(s)\n"
+"    if keyboardaltgr[KEYBOARD]~=nil then\n"
+"        return (s:gsub(\"(.)\",function(c)return keyboardaltgr[KEYBOARD][\"after\"]:sub(keyboardaltgr[KEYBOARD][\"before\"]:find(c,1,true))end))\n"
+"    else return s end\n"
+"end\n"
+"--local ui_base local ui_box local ui_text local ui_button local ui_scrollbar local ui_inputbox local ui_chatbox\n"
+"ui_base = {\n"
+"new = function()\n"
+"    local b={}\n"
+"    b.drawlist = {}\n"
+"    function b:drawadd(f)\n"
+"        table.insert(self.drawlist,f)\n"
+"    end\n"
+"    function b:draw(...)\n"
+"        for _,f in ipairs(self.drawlist) do\n"
+"            if type(f)==\"function\" then\n"
+"                f(self,unpack(arg))\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"    b.movelist = {}\n"
+"    function b:moveadd(f)\n"
+"        table.insert(self.movelist,f)\n"
+"    end\n"
+"    function b:onmove(x,y)\n"
+"        for _,f in ipairs(self.movelist) do\n"
+"            if type(f)==\"function\" then\n"
+"                f(self,x,y)\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"    return b\n"
+"end\n"
+"}\n"
+"ui_box = {\n"
+"new = function(x,y,w,h,r,g,b)\n"
+"    local box=ui_base.new()\n"
+"    box.x=x box.y=y box.w=w box.h=h box.x2=x+w box.y2=y+h\n"
+"    box.r=r or 255 box.g=g or 255 box.b=b or 255\n"
+"    function box:setcolor(r,g,b) self.r=r self.g=g self.b=b end\n"
+"    function box:setbackground(r,g,b,a) self.br=r self.bg=g self.bb=b self.ba=a end\n"
+"    box.drawbox=true\n"
+"    box.drawbackground=false\n"
+"    box:drawadd(function(self) if self.drawbackground then tpt.fillrect(self.x,self.y,self.w,self.h,self.br,self.bg,self.bb,self.ba) end\n"
+"                                if self.drawbox then tpt.drawrect(self.x,self.y,self.w,self.h,self.r,self.g,self.b) end end)\n"
+"    box:moveadd(function(self,x,y)\n"
+"        if x then self.x=self.x+x self.x2=self.x2+x end\n"
+"        if y then self.y=self.y+y self.y2=self.y2+y end\n"
+"    end)\n"
+"    return box\n"
+"end\n"
+"}\n"
+"ui_text = {\n"
+"new = function(text,x,y,r,g,b)\n"
+"    local txt = ui_base.new()\n"
+"    txt.text = text\n"
+"    txt.x=x or 0 txt.y=y or 0 txt.r=r or 255 txt.g=g or 255 txt.b=b or 255\n"
+"    function txt:setcolor(r,g,b) self.r=r self.g=g self.b=b end\n"
+"    txt:drawadd(function(self,x,y) tpt.drawtext(x or self.x,y or self.y,self.text,self.r,self.g,self.b) end)\n"
+"    txt:moveadd(function(self,x,y)\n"
+"        if x then self.x=self.x+x end\n"
+"        if y then self.y=self.y+y end\n"
+"    end)\n"
+"    function txt:process() return false end\n"
+"    return txt\n"
+"end,\n"
+"--Scrolls while holding mouse over\n"
+"newscroll = function(text,x,y,vis,force,r,g,b)\n"
+"    local txt = ui_text.new(text,x,y,r,g,b)\n"
+"    if not force and tpt.textwidth(text)<vis then return txt end\n"
+"    txt.visible=vis\n"
+"    txt.length=string.len(text)\n"
+"    txt.start=1\n"
+"    local last=2\n"
+"    while tpt.textwidth(text:sub(1,last))<vis and last<=txt.length do\n"
+"        last=last+1\n"
+"    end\n"
+"    txt.last=last-1\n"
+"    txt.minlast=last-1\n"
+"    txt.ppl=((txt.visible-6)/(txt.length-txt.minlast+1))\n"
+"    function txt:update(text,pos)\n"
+"        if text then\n"
+"            self.text=text\n"
+"            self.length=string.len(text)\n"
+"            local last=2\n"
+"            while tpt.textwidth(text:sub(1,last))<self.visible and last<=self.length do\n"
+"                last=last+1\n"
+"            end\n"
+"            self.minlast=last-1\n"
+"            self.ppl=((self.visible-6)/(self.length-self.minlast+1))\n"
+"            if not pos then self.last=self.minlast end\n"
+"        end\n"
+"        if pos then\n"
+"            if pos>=self.last and pos<=self.length then --more than current visible\n"
+"                local newlast = pos\n"
+"                local newstart=1\n"
+"                while tpt.textwidth(self.text:sub(newstart,newlast))>= self.visible do\n"
+"                    newstart=newstart+1\n"
+"                end\n"
+"                self.start=newstart self.last=newlast\n"
+"            elseif pos<self.start and pos>0 then --position less than current visible\n"
+"                local newstart=pos\n"
+"                local newlast=pos+1\n"
+"                while tpt.textwidth(self.text:sub(newstart,newlast))<self.visible and newlast<self.length do\n"
+"                        newlast=newlast+1\n"
+"                end\n"
+"                self.start=newstart self.last=newlast-1\n"
+"            end\n"
+"            --keep strings as long as possible (pulls from left)\n"
+"            local newlast=self.last\n"
+"            if newlast<self.minlast then newlast=self.minlast end\n"
+"            local newstart=1\n"
+"            while tpt.textwidth(self.text:sub(newstart,newlast))>= self.visible do\n"
+"                    newstart=newstart+1\n"
+"            end\n"
+"            self.start=newstart self.last=newlast\n"
+"        end\n"
+"    end\n"
+"    txt.drawlist={} --reset draw\n"
+"    txt:drawadd(function(self,x,y)\n"
+"        tpt.drawtext(x or self.x,y or self.y, self.text:sub(self.start,self.last) ,self.r,self.g,self.b)\n"
+"    end)\n"
+"    function txt:process(mx,my,button,event,wheel)\n"
+"        if event==3 then\n"
+"            local newlast = math.floor((mx-self.x)/self.ppl)+self.minlast\n"
+"            if newlast<self.minlast then newlast=self.minlast end\n"
+"            if newlast>0 and newlast~=self.last then\n"
+"                local newstart=1\n"
+"                while tpt.textwidth(self.text:sub(newstart,newlast))>= self.visible do\n"
+"                    newstart=newstart+1\n"
+"                end\n"
+"                self.start=newstart self.last=newlast\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"    return txt\n"
+"end\n"
+"}\n"
+"ui_inputbox = {\n"
+"new=function(x,y,w,h)\n"
+"    local intext=ui_box.new(x,y,w,h)\n"
+"    intext.cursor=0\n"
+"    intext.line=1\n"
+"    intext.currentline = \"\"\n"
+"    intext.focus=false\n"
+"    intext.t=ui_text.newscroll(\"\",x+2,y+2,w-2,true)\n"
+"    intext.history={}\n"
+"    intext.max_history=200\n"
+"    intext:drawadd(function(self)\n"
+"        local cursoradjust=tpt.textwidth(self.t.text:sub(self.t.start,self.cursor))+2\n"
+"        tpt.drawline(self.x+cursoradjust,self.y,self.x+cursoradjust,self.y+10,255,255,255)\n"
+"        self.t:draw()\n"
+"    end)\n"
+"    intext:moveadd(function(self,x,y) self.t:onmove(x,y) end)\n"
+"    function intext:setfocus(focus)\n"
+"        self.focus=focus\n"
+"        if focus then tpt.set_shortcuts(0) self:setcolor(255,255,0)\n"
+"        else tpt.set_shortcuts(1) self:setcolor(255,255,255) end\n"
+"    end\n"
+"    function intext:movecursor(amt)\n"
+"        self.cursor = self.cursor+amt\n"
+"        if self.cursor>self.t.length then self.cursor = self.t.length end\n"
+"        if self.cursor<0 then self.cursor = 0 return end\n"
+"    end\n"
+"    function intext:addhistory(str)\n"
+"        self.history[#self.history+1] = str\n"
+"        if #self.history >= self.max_history then\n"
+"            table.remove(self.history, 1)\n"
+"        end\n"
+"    end\n"
+"    function intext:moveline(amt)\n"
+"        self.line = self.line+amt\n"
+"        local max = #self.currentline and #self.history+2 or #self.history+1\n"
+"        if self.line>max then self.line=max\n"
+"        elseif self.line<1 then self.line=1 end\n"
+"        local history = self.history[self.line] or \"\"\n"
+"        if self.line == #self.history+1 then history = self.currentline end\n"
+"        self.cursor = string.len(history)\n"
+"        self.t:update(history, self.cursor)\n"
+"    end\n"
+"    function intext:textprocess(key,nkey,modifier,event)\n"
+"        if event~=1 then return end\n"
+"        if not self.focus then\n"
+"            if nkey==13 then self:setfocus(true) return true end\n"
+"            return\n"
+"        end\n"
+"        if nkey==27 then self:setfocus(false) return true end\n"
+"        if nkey==13 then local text=self.t.text if text == \"\" then self:setfocus(false) return true else self.cursor=0 self.t.text=\"\" self:addhistory(text) self.line=#self.history+1 self.currentline = \"\" return text end end --enter\n"
+"        if nkey==273 then self:moveline(-1) return true end --up\n"
+"        if nkey==274 then self:moveline(1) return true end --down\n"
+"        if nkey==275 then self:movecursor(1) self.t:update(nil,self.cursor) return true end --right\n"
+"        if nkey==276 then self:movecursor(-1) self.t:update(nil,self.cursor) return true end --left\n"
+"        local modi = (modifier%1024)\n"
+"        local newstr\n"
+"        if nkey==8 and self.cursor > 0 then newstr=self.t.text:sub(1,self.cursor-1) .. self.t.text:sub(self.cursor+1) self:movecursor(-1) --back\n"
+"        elseif nkey==127 then newstr=self.t.text:sub(1,self.cursor) .. self.t.text:sub(self.cursor+2) --delete\n"
+"        elseif nkey==9 then --tab complete\n"
+"            local nickstart,nickend,nick = self.t.text:sub(1,self.cursor+1):find(\"([^%s%c]+)\"..(self.cursor == #self.t.text and \"\" or \" \")..\"$\")\n"
+"            if con.members and nick then\n"
+"                for k,v in pairs(con.members) do\n"
+"                    if v.name:sub(1,#nick) == nick then\n"
+"                        nick = v.name if nickstart == 1 then nick = nick..\":\" end newstr = self.t.text:sub(1,nickstart-1)..nick..\" \"..self.t.text:sub(nickend+1,#self.t.text) self.cursor = nickstart+#nick\n"
+"                    end\n"
+"                end\n"
+"            end\n"
+"        else\n"
+"            if nkey<32 or nkey>=127 then return true end --normal key\n"
+"            local shiftkey = (modi==1 or modi==2)\n"
+"            if math.floor((modifier%16384)/8192)==1 and key >= 'a' and key <= 'z' then shiftkey = not shiftkey end\n"
+"            local addkey = shiftkey and shift(key) or key\n"
+"            if (math.floor(modi/512))==1 then addkey=altgr(key) end\n"
+"            newstr = self.t.text:sub(1,self.cursor) .. addkey .. self.t.text:sub(self.cursor+1)\n"
+"            self.currentline = newstr\n"
+"            self.t:update(newstr,self.cursor+1)\n"
+"            self:movecursor(1)\n"
+"            return true\n"
+"        end\n"
+"        if newstr then\n"
+"            self.t:update(newstr,self.cursor)\n"
+"        end\n"
+"        --some actual text processing, lol\n"
+"    end\n"
+"    return intext\n"
+"end\n"
+"}\n"
+"ui_scrollbar = {\n"
+"new = function(x,y,h,t,m)\n"
+"    local bar = ui_base.new() --use line object as base?\n"
+"    bar.x=x bar.y=y bar.h=h\n"
+"    bar.total=t\n"
+"    bar.numshown=m\n"
+"    bar.pos=0\n"
+"    bar.length=math.floor((1/math.ceil(bar.total-bar.numshown+1))*bar.h)\n"
+"    bar.soffset=math.floor(bar.pos*((bar.h-bar.length)/(bar.total-bar.numshown)))\n"
+"    function bar:update(total,shown,pos)\n"
+"        self.pos=pos or 0\n"
+"        if self.pos<0 then self.pos=0 end\n"
+"        self.total=total\n"
+"        self.numshown=shown\n"
+"        self.length= math.floor((1/math.ceil(self.total-self.numshown+1))*self.h)\n"
+"        self.soffset= math.floor(self.pos*((self.h-self.length)/(self.total-self.numshown)))\n"
+"    end\n"
+"    function bar:move(wheel)\n"
+"        self.pos = self.pos-wheel\n"
+"        if self.pos < 0 then self.pos=0 end\n"
+"        if self.pos > (self.total-self.numshown) then self.pos=(self.total-self.numshown) end\n"
+"        self.soffset= math.floor(self.pos*((self.h-self.length)/(self.total-self.numshown)))\n"
+"    end\n"
+"    bar:drawadd(function(self)\n"
+"        if self.total > self.numshown then\n"
+"            tpt.drawline(self.x,self.y+self.soffset,self.x,self.y+self.soffset+self.length)\n"
+"        end\n"
+"    end)\n"
+"    bar:moveadd(function(self,x,y)\n"
+"        if x then self.x=self.x+x end\n"
+"        if y then self.y=self.y+y end\n"
+"    end)\n"
+"    function bar:process(mx,my,button,event,wheel)\n"
+"        if wheel~=0 and not hidden_mode then\n"
+"            if self.total > self.numshown then\n"
+"                local previous = self.pos\n"
+"                self:move(wheel)\n"
+"                if self.pos~=previous then\n"
+"                    return wheel\n"
+"                end\n"
+"            end\n"
+"        end\n"
+"        --possibly click the bar and drag?\n"
+"        return false\n"
+"    end\n"
+"    return bar\n"
+"end\n"
+"}\n"
+"ui_button = {\n"
+"new = function(x,y,w,h,f,text)\n"
+"    local b = ui_box.new(x,y,w,h)\n"
+"    b.f=f\n"
+"    b.t=ui_text.new(text,x+2,y+2)\n"
+"    b.drawbox=false\n"
+"    b.almostselected=false\n"
+"    b.invert=true\n"
+"    b:drawadd(function(self)\n"
+"        if self.invert and self.almostselected then\n"
+"            self.almostselected=false\n"
+"            tpt.fillrect(self.x,self.y,self.w,self.h)\n"
+"            local tr=self.t.r local tg=self.t.g local tb=self.t.b\n"
+"            b.t:setcolor(0,0,0)\n"
+"            b.t:draw()\n"
+"            b.t:setcolor(tr,tg,tb)\n"
+"        else\n"
+"            b.t:draw()\n"
+"        end\n"
+"    end)\n"
+"    b:moveadd(function(self,x,y)\n"
+"        self.t:onmove(x,y)\n"
+"    end)\n"
+"    function b:process(mx,my,button,event,wheel)\n"
+"        if mx<self.x or mx>self.x2 or my<self.y or my>self.y2 then return false end\n"
+"        if event==3 then self.almostselected=true end\n"
+"        if event==2 then self:f() end\n"
+"        return true\n"
+"    end\n"
+"    return b\n"
+"end\n"
+"}\n"
+"ui_chatbox = {\n"
+"new=function(x,y,w,h)\n"
+"    local chat=ui_box.new(x,y,w,h)\n"
+"    chat.moving=false\n"
+"    chat.lastx=0\n"
+"    chat.lasty=0\n"
+"    chat.relx=0\n"
+"    chat.rely=0\n"
+"    chat.shown_lines=math.floor(chat.h/10)-2 --one line for top, one for chat\n"
+"    chat.max_width=chat.w-4\n"
+"    chat.max_lines=200\n"
+"    chat.lines = {}\n"
+"    chat.scrollbar = ui_scrollbar.new(chat.x2-2,chat.y+11,chat.h-22,0,chat.shown_lines)\n"
+"    chat.inputbox = ui_inputbox.new(x,chat.y2-10,w,10)\n"
+"    function chat:addtext(t, start)\n"
+"        self.inputbox.t.text = self.inputbox.t.text .. t:sub(start, -1)\n"
+"        self.inputbox.cursor = self.inputbox.cursor + #(t:sub(start, -1))\n"
+"    end\n"
+"    chat.minimize = ui_button.new(chat.x2-15,chat.y,15,10,function() chat.moving=false chat.inputbox:setfocus(false) L.chatHidden=true TPTMP.chatHidden=true end,\">>\")\n"
+"    chat:drawadd(function(self)\n"
+"        if self.w > 175 and jacobsmod then\n"
+"            tpt.drawtext(self.x+self.w/2-tpt.textwidth(\"TPT Multiplayer, by cracker64\")/2,self.y+2,\"TPT Multiplayer, by cracker64\")\n"
+"        elseif self.w > 100 then\n"
+"            tpt.drawtext(self.x+self.w/2-tpt.textwidth(\"TPT Multiplayer\")/2,self.y+2,\"TPT Multiplayer\")\n"
+"        end\n"
+"        tpt.drawline(self.x+1,self.y+10,self.x2-1,self.y+10,120,120,120)\n"
+"        self.scrollbar:draw()\n"
+"        local count=0\n"
+"        for i,line in ipairs(self.lines) do\n"
+"            if i>self.scrollbar.pos and i<= self.scrollbar.pos+self.shown_lines then\n"
+"                line:draw(self.x+3,self.y+12+(count*10))\n"
+"                count = count+1\n"
+"            end\n"
+"        end\n"
+"        self.inputbox:draw()\n"
+"        self.minimize:draw()\n"
+"    end)\n"
+"    chat:moveadd(function(self,x,y)\n"
+"        for i,line in ipairs(self.lines) do\n"
+"            line:onmove(x,y)\n"
+"        end\n"
+"        self.scrollbar:onmove(x,y)\n"
+"        self.inputbox:onmove(x,y)\n"
+"        self.minimize:onmove(x,y)\n"
+"    end)\n"
+"    function chat:addline(line,r,g,b,noflash)\n"
+"        if not line or line==\"\" then return end --No blank lines\n"
+"        local linebreak=0\n"
+"        for i=0,#line do\n"
+"            if tpt.textwidth(line:sub(linebreak,i+1))>self.max_width or i==#line then\n"
+"                local last=i-(((not(i==#line))and(line:sub(linebreak,i):reverse():find('[%s%-_,]')))or 0)\n"
+"                table.insert(self.lines,ui_text.new(line:sub(linebreak,last),self.x,0,r,g,b))\n"
+"                linebreak=last+2\n"
+"            end\n"
+"        end\n"
+"        while #self.lines>self.max_lines do table.remove(self.lines,1) end\n"
+"        self.scrollbar:update(#self.lines,self.shown_lines,#self.lines-self.shown_lines)\n"
+"        if L.chatHidden and not noflash then L.flashChat=true end\n"
+"    end\n"
+"    chat:addline(\"TPTMP v\"..versionstring..\": Type '/connect' to join server, or /list for a list of commands.\",200,200,200,true)\n"
+"    function chat:process(mx,my,button,event,wheel)\n"
+"        if L.chatHidden then return false end\n"
+"        self.minimize:process(mx,my,button,event,wheel)\n"
+"        if self.moving and event==3 then\n"
+"            local newx,newy = mx-self.relx,my-self.rely\n"
+"            local ax,ay = 0,0\n"
+"            if newx<0 then ax = newx end\n"
+"            if newy<0 then ay = newy end\n"
+"            if (newx+self.w)>=sim.XRES then ax = newx+self.w-sim.XRES end\n"
+"            if (newy+self.h)>=sim.YRES then ay = newy+self.h-sim.YRES end\n"
+"            self:onmove(mx-self.lastx-ax,my-self.lasty-ay)\n"
+"            self.lastx=mx-ax\n"
+"            self.lasty=my-ay\n"
+"            return true\n"
+"        end\n"
+"        local which = math.floor((my-self.y)/10)\n"
+"        if self.moving and event==2 then self.moving=false return true end\n"
+"        if mx<self.x or mx>self.x2 or my<self.y or my>self.y2 then if button == 0 then return false end self.inputbox:setfocus(false) return false elseif event==1 and which ~= 0 and not self.inputbox.focus then self.inputbox:setfocus(true) end\n"
+"        self.scrollbar:process(mx,my,button,event,wheel)\n"
+"        if event==1 and which==0 then self.moving=true self.lastx=mx self.lasty=my self.relx=mx-self.x self.rely=my-self.y return true end\n"
+"        if event==1 and which==self.shown_lines+1 then self.inputbox:setfocus(true) return true elseif self.inputbox.focus then return true end --trigger input_box\n"
+"        if which>0 and which<self.shown_lines+1 and self.lines[which+self.scrollbar.pos] then self.lines[which+self.scrollbar.pos]:process(mx,my,button,event,wheel) end\n"
+"        return event==1\n"
+"    end\n"
+"    --commands for chat window\n"
+"    chatcommands = {\n"
+"    connect = function(self,msg,args)\n"
+"        ChosenIP, ChosenPort = args[1], args[2]\n"
+"        if not issocket then self:addline(\"No luasockets found\") return end\n"
+"        local newname = pcall(string.dump, get_name) and \"Gue\"..\"st_\"..math[\"random\"](1111,9888) or get_name()\n"
+"        CurrentNick = newname\n"
+"        if mpList['default_nick'] and mpList['default_nick'] ~= '' then\n"
+"            newname, CurrentNick = mpList['default_nick'], mpList['default_nick']\n"
+"        end\n"
+"        local s,r = connectToServer(args[1],tonumber(args[2]), newname~=\"\" and newname or username)\n"
+"        if not s then self:addline(r,255,50,50) end\n"
+"        pressedKeys = nil\n"
+"        if mpList['onconnect'] and mpList['onconnect'] ~= '' then\n"
+"            parseAndSend(mpList['onconnect'], self)\n"
+"        end\n"
+"    end,\n"
+"	join = function(self,msg,args)\n"
+"        if args[1] then\n"
+"            joinChannel(args[1])\n"
+"            CurrentChannel = args[1]\n"
+"            self:addline(\"joined channel \"..args[1],50,255,50)\n"
+"        end\n"
+"    end,\n"
+"	autoconnect = function(self, msg, args)\n"
+"        if mpList['autoconnect'] and mpList['autoconnect'] ~= 'false' then\n"
+"            mpAdd('autoconnect', 'false')\n"
+"            self:addline('Turned off autoconnect', 100, 100, 0)\n"
+"        else\n"
+"            mpAdd('autoconnect', 'true')\n"
+"            self:addline('Turned on autoconnect', 100, 100, 0)\n"
+"        end\n"
+"    end,\n"
+"	quit = function(self,msg,args)\n"
+"        conSend(20, \"is leaving (\" .. table.concat(args, ' ') .. \")\", true)\n"
+"        disconnected(\"Disconnected\")\n"
+"    end,\n"
+"    disconnect = function(self,msg,args)\n"
+"        disconnected(\"Disconnected\")\n"
+"    end,\n"
+"	afk = function(self, msg, args)\n"
+"        if isAFK then\n"
+"            isAFK = false\n"
+"            --conSend(20, 'is no longer AFK', true)\n"
+"            parseAndSend('/me is no longer AFK', self)\n"
+"            self:addline('Exited AFK mode', 0, 100, 0)\n"
+"        else\n"
+"            isAFK = true\n"
+"            --conSend(20, 'is now AFK', true)\n"
+"            parseAndSend('/me is now AFK', self)\n"
+"            self:addline('Entered AFK mode', 0, 100, 0)\n"
+"        end\n"
+"    end,\n"
+"    nick = function(self, msg, args)\n"
+"        disconnected('Changing nick...')\n"
+"        CurrentNick = args[1]\n"
+"        mpAdd('default_nick', args[1])\n"
+"        connectToServer(ChosenIP, ChosenPort, args[1])\n"
+"        if CurrentChannel ~= 'null' then\n"
+"            joinChannel(CurrentChannel)\n"
+"        end\n"
+"    end,\n"
+"    send = function(self,msg,args)\n"
+"        if tonumber(args[1]) and args[2] then\n"
+"        local withNull=false\n"
+"        if args[2]==\"true\" then withNull=true end\n"
+"        msg = msg:sub(#args[1]+1+(withNull and #args[2]+2 or 0))\n"
+"        conSend(tonumber(args[1]),msg,withNull)\n"
+"        end\n"
+"    end,\n"
+"    getpref = function(self,msg,args)\n"
+"        if mpList[args[1]] then\n"
+"            self:addline(args[1] .. ': ' .. mpList[args[1]],50,255,50)\n"
+"        end\n"
+"    end,\n"
+"    listpref = function(self,msg,args)\n"
+"        for i, v in pairs(mpList) do\n"
+"            self:addline(i .. ': ' .. v, 255, 255, 50)\n"
+"        end\n"
+"    end,\n"
+"    channel = function(self,msg,args)\n"
+"        self:addline('Current channel: ' .. CurrentChannel, 50, 255, 50)\n"
+"    end,\n"
+"	users = function(self, msg, args)\n"
+"		self:addline(\"Users: \" .. table.concat(CurrentUsers, \", \"), 255, 255, 50)\n"
+"	end,\n"
+"	ignore = function(self,msg,args)\n"
+"        if args[1] then\n"
+"            self:addline('Ignored user' .. (#args > 1 and 's ' or ' ') .. table.concat(args, ', '),50,255,50)\n"
+"            for i, v in ipairs(args) do args[i] = 'IGNORE_USER:' .. (args[i]):lower() .. ',' end\n"
+"            mpAdd('ignore', (mpList['ignore'] and mpList['ignore'] .. ',' or '') .. table.concat(args, ''))\n"
+"        end\n"
+"    end,\n"
+"	unignore = function(self,msg,args)\n"
+"        if not mpList['ignore'] then self:addline('You have not ignored any users!', 50, 255, 50) return end\n"
+"        if args[1] then\n"
+"			 self:addline('Unignored user' .. (#args > 1 and 's ' or ' ') .. table.concat(args, ', '),50,255,50)\n"
+"            local n = mpList['ignore']\n"
+"            for i, v in ipairs(args) do\n"
+"                args[i] = (args[i]):lower()\n"
+"                n = n:gsub('IGNORE_USER:' .. args[i] .. ',', '')\n"
+"            end\n"
+"            mpAdd('ignore', n)\n"
+"        end\n"
+"    end,\n"
+"    sync = function(self,msg,args)\n"
+"        if con.connected then L.sendScreen=true end --need to send 67 clear screen\n"
+"        self:addline(\"Synced screen to server\",255,255,50)\n"
+"    end,\n"
+"    help = function(self,msg,args)\n"
+"        if not args[1] then self:addline(\"/help <command>, type /list for a list of commands\") end\n"
+"        if args[1] == \"connect\" then self:addline(\"(/connect [ip] [port]) -- connect to a TPT multiplayer server, or no args to connect to the default one\")\n"
+"        --elseif args[1] == \"send\" then self:addline(\"(/send <something> <somethingelse>) -- send raw data to the server\") -- send a raw command\n"
+"        elseif args[1] == \"quit\" or args[1] == \"disconnect\" then self:addline(\"(/quit, no arguments) -- quit the game\")\n"
+"        elseif args[1] == \"join\" then self:addline(\"(/join <channel> -- joins a room on the server\")\n"
+"        elseif args[1] == \"sync\" then self:addline(\"(/sync, no arguments) -- syncs your screen to everyone else in the room\")\n"
+"        elseif args[1] == \"me\" then self:addline(\"(/me <message>) -- say something in 3rd person\") -- send a raw command\n"
+"        elseif args[1] == \"kick\" then self:addline(\"(/kick <nick> <reason>) -- kick a user, only works if you have been in a channel the longest\")\n"
+"        elseif args[1] == \"size\" then self:addline(\"(/size <width> <height>) -- sets the size of the chat window\")\n"
+"        end\n"
+"    end,\n"
+"    list = function(self,msg,args)\n"
+"        local list = \"\"\n"
+"        for name in pairs(chatcommands) do\n"
+"            list=list..name..\", \"\n"
+"        end\n"
+"        self:addline(\"Commands: \"..list:sub(1,#list-2))\n"
+"    end,\n"
+"    me = function(self, msg, args)\n"
+"        if not con.connected then return end\n"
+"        self:addline(\"* \" .. username .. \" \".. table.concat(args, \" \"),200,200,200)\n"
+"        conSend(20,table.concat(args, \" \"),true)\n"
+"    end,\n"
+"    kick = function(self, msg, args)\n"
+"        if not con.connected then return end\n"
+"        if not args[1] then self:addline(\"Need a nick! '/kick <nick> [reason]'\") return end\n"
+"        conSend(21, args[1]..\"\\0\"..table.concat(args, \" \", 2),true)\n"
+"    end,\n"
+"    size = function(self, msg, args)\n"
+"        if args[2] then\n"
+"            local w, h = tonumber(args[1]), tonumber(args[2])\n"
+"            if w < 75 or h < 50 then self:addline(\"size too small\") return\n"
+"            elseif w > sim.XRES-100 or h > sim.YRES-100 then self:addline(\"size too large\") return\n"
+"            end\n"
+"            chatwindow = ui_chatbox.new(100,100,w,h)\n"
+"            chatwindow:setbackground(10,10,10,235) chatwindow.drawbackground=true\n"
+"            if using_manager then\n"
+"                MANAGER.savesetting(\"tptmp\", \"width\", w)\n"
+"                MANAGER.savesetting(\"tptmp\", \"height\", h)\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"    }\n"
+"	local leets = {}\n"
+"	leets.a = '4'\n"
+"	leets.e = '3'\n"
+"	leets.l = '1'\n"
+"	leets.o = '0'\n"
+"	leets.s = '5'\n"
+"	leets.t = '7'\n"
+"	if tpt.get_name() == \"FeynmanLogomaker\" then\n"
+"		chatcommands.leet = function(self, msg, args)\n"
+"			local s = (table.concat(args, \" \")):lower()\n"
+"			for i, v in pairs(leets) do\n"
+"				s = s:gsub(i, v)\n"
+"			end\n"
+"			chatwindow:addline(CurrentNick .. \": \" .. s, 200, 200, 200)\n"
+"			conSend(19, s, true)\n"
+"		end\n"
+"	end\n"
+"    function chat:textprocess(key,nkey,modifier,event)\n"
+"        if L.chatHidden then return nil end\n"
+"        local text = self.inputbox:textprocess(key,nkey,modifier,event)\n"
+"        if type(text)==\"boolean\" then return text end\n"
+"        if text and text~=\"\" then\n"
+"            local cmd = text:match(\"^/([^%s]+)\")\n"
+"            if cmd then\n"
+"                local msg=text:sub(#cmd+3)\n"
+"                local args = getArgs(msg)\n"
+"                if chatcommands[cmd] then\n"
+"                    chatcommands[cmd](self,msg,args)\n"
+"                    --self:addline(\"Executed \"..cmd..\" \"..rest)\n"
+"                    return\n"
+"                end\n"
+"            end\n"
+"            --normal chat\n"
+"            if con.connected then\n"
+"                --[[\n"
+"				for i, v in pairs(swears) do\n"
+"					text = text:gsub(i, v)\n"
+"				end\n"
+"                --]]\n"
+"                conSend(19,text,true)\n"
+"                self:addline(username .. \": \".. text,200,200,200)\n"
+"            else\n"
+"                self:addline(\"Not connected to server!\",255,50,50)\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"    return chat\n"
+"end\n"
+"}\n"
+"local fadeText = {}\n"
+"--A little text that fades away, (align text (left/center/right)?)\n"
+"local function newFadeText(text,frames,x,y,r,g,b,noremove)\n"
+"    local t = {ticks=frames,max=frames,text=text,x=x,y=y,r=r,g=g,b=b,keep=noremove}\n"
+"    t.reset = function(self,text) self.ticks=self.max if text then self.text=text end end\n"
+"    table.insert(fadeText,t)\n"
+"    return t\n"
+"end\n"
+"--Some text locations for repeated usage\n"
+"local infoText = newFadeText(\"\",150,245,370,255,255,255,true)\n"
+"local cmodeText = newFadeText(\"\",120,250,180,255,255,255,true)\n"
+"local showbutton = ui_button.new(613,using_manager and 119 - ICONS_ADDED * 16 or 136 - ICONS_ADDED * 16,14,14,function() if using_manager and not MANAGER.hidden then _print(\"minimize the manager before opening TPTMP\") return end if not hooks_enabled then TPTMP.enableMultiplayer() end L.chatHidden=false TPTMP.chatHidden=false L.flashChat=false end,\"<<\")\n"
+"if jacobsmod and tpt.oldmenu()~=0 then\n"
+"    showbutton:onmove(0, 256)\n"
+"end\n"
+"local flashCount=0\n"
+"showbutton.drawbox = true showbutton:drawadd(function(self) if L.flashChat then self.almostselected=true flashCount=flashCount+1 if flashCount%25==0 then self.invert=not self.invert end end end)\n"
+"if using_manager then\n"
+"    local loadsettings = function() chatwindow = ui_chatbox.new(100, 100, tonumber(MANAGER.getsetting(\"tptmp\", \"width\")), tonumber(MANAGER.getsetting(\"tptmp\", \"height\"))) end\n"
+"    if not pcall(loadsettings) then chatwindow = ui_chatbox.new(100, 100, 225, 150) end\n"
+"else\n"
+"    chatwindow = ui_chatbox.new(100, 100, 225, 150)\n"
+"end\n"
+"chatwindow:setbackground(10,10,10,235) chatwindow.drawbackground=true\n"
+"local eleNameTable = {\n"
+"[\"DEFAULT_PT_LIFE_GOL\"] = 256,[\"DEFAULT_PT_LIFE_HLIF\"] = 257,[\"DEFAULT_PT_LIFE_ASIM\"] = 258,[\"DEFAULT_PT_LIFE_2x2\"] = 259,[\"DEFAULT_PT_LIFE_DANI\"] = 260,\n"
+"[\"DEFAULT_PT_LIFE_AMOE\"] = 261,[\"DEFAULT_PT_LIFE_MOVE\"] = 262,[\"DEFAULT_PT_LIFE_PGOL\"] = 263,[\"DEFAULT_PT_LIFE_DMOE\"] = 264,[\"DEFAULT_PT_LIFE_34\"] = 265,\n"
+"[\"DEFAULT_PT_LIFE_LLIF\"] = 276,[\"DEFAULT_PT_LIFE_STAN\"] = 267,[\"DEFAULT_PT_LIFE_SEED\"] = 268,[\"DEFAULT_PT_LIFE_MAZE\"] = 269,[\"DEFAULT_PT_LIFE_COAG\"] = 270,\n"
+"[\"DEFAULT_PT_LIFE_WALL\"] = 271,[\"DEFAULT_PT_LIFE_GNAR\"] = 272,[\"DEFAULT_PT_LIFE_REPL\"] = 273,[\"DEFAULT_PT_LIFE_MYST\"] = 274,[\"DEFAULT_PT_LIFE_LOTE\"] = 275,\n"
+"[\"DEFAULT_PT_LIFE_FRG2\"] = 276,[\"DEFAULT_PT_LIFE_STAR\"] = 277,[\"DEFAULT_PT_LIFE_FROG\"] = 278,[\"DEFAULT_PT_LIFE_BRAN\"] = 279,\n"
+"[\"DEFAULT_WL_0\"] = 280,[\"DEFAULT_WL_1\"] = 281,[\"DEFAULT_WL_2\"] = 282,[\"DEFAULT_WL_3\"] = 283,[\"DEFAULT_WL_4\"] = 284,\n"
+"[\"DEFAULT_WL_5\"] = 285,[\"DEFAULT_WL_6\"] = 286,[\"DEFAULT_WL_7\"] = 287,[\"DEFAULT_WL_8\"] = 288,[\"DEFAULT_WL_9\"] = 289,[\"DEFAULT_WL_10\"] = 290,\n"
+"[\"DEFAULT_WL_11\"] = 291,[\"DEFAULT_WL_12\"] = 292,[\"DEFAULT_WL_13\"] = 293,[\"DEFAULT_WL_14\"] = 294,[\"DEFAULT_WL_15\"] = 295,\n"
+"[\"DEFAULT_UI_SAMPLE\"] = 296,[\"DEFAULT_UI_SIGN\"] = 297,[\"DEFAULT_UI_PROPERTY\"] = 298,[\"DEFAULT_UI_WIND\"] = 299,\n"
+"[\"DEFAULT_TOOL_HEAT\"] = 300,[\"DEFAULT_TOOL_COOL\"] = 301,[\"DEFAULT_TOOL_VAC\"] = 302,[\"DEFAULT_TOOL_AIR\"] = 303,[\"DEFAULT_TOOL_PGRV\"] = 304,[\"DEFAULT_TOOL_NGRV\"] = 305,\n"
+"[\"DEFAULT_DECOR_SET\"] = 306,[\"DEFAULT_DECOR_ADD\"] = 307,[\"DEFAULT_DECOR_SUB\"] = 308,[\"DEFAULT_DECOR_MUL\"] = 309,[\"DEFAULT_DECOR_DIV\"] = 310,[\"DEFAULT_DECOR_SMDG\"] = 311,[\"DEFAULT_DECOR_CLR\"] = 312,[\"DEFAULT_DECOR_LIGH\"] = 313, [\"DEFAULT_DECOR_DARK\"] = 314, [\"DEFAULT_DECOR_EASE\"] = 315\n"
+"}\n"
+"local function convertDecoTool(c)\n"
+"    return c\n"
+"end\n"
+"if jacobsmod then\n"
+"    function convertDecoTool(c)\n"
+"        if c >= 307 and c <= 311 then\n"
+"            c = c + 1\n"
+"        elseif c == 312 then\n"
+"            c = 307\n"
+"        end\n"
+"        return c\n"
+"    end\n"
+"    local modNameTable = {\n"
+"    [\"DEFAULT_WL_ERASE\"] = 280,[\"DEFAULT_WL_CNDTW\"] = 281,[\"DEFAULT_WL_EWALL\"] = 282,[\"DEFAULT_WL_DTECT\"] = 283,[\"DEFAULT_WL_STRM\"] = 284,\n"
+"    [\"DEFAULT_WL_FAN\"] = 285,[\"DEFAULT_WL_LIQD\"] = 286,[\"DEFAULT_WL_ABSRB\"] = 287,[\"DEFAULT_WL_WALL\"] = 288,[\"DEFAULT_WL_AIR\"] = 289,[\"DEFAULT_WL_POWDR\"] = 290,\n"
+"    [\"DEFAULT_WL_CNDTR\"] = 291,[\"DEFAULT_WL_EHOLE\"] = 292,[\"DEFAULT_WL_GAS\"] = 293,[\"DEFAULT_WL_GRVTY\"] = 294,[\"DEFAULT_WL_ENRGY\"] = 295,[\"DEFAULT_WL_ERASEA\"] = 280\n"
+"    }\n"
+"    for k,v in pairs(modNameTable) do\n"
+"        eleNameTable[k] = v\n"
+"    end\n"
+"end\n"
+"local gravList= {[0]=\"Vertical\",[1]=\"Off\",[2]=\"Radial\"}\n"
+"local airList= {[0]=\"On\",[1]=\"Pressure Off\",[2]=\"Velocity Off\",[3]=\"Off\",[4]=\"No Update\"}\n"
+"local noFlood = {[15]=true,[55]=true,[87]=true,[128]=true,[158]=true}\n"
+"local noShape = {[55]=true,[87]=true,[128]=true,[158]=true}\n"
+"local createOverride = {[55]=function(x,y,rx,ry,c,brush) sim.createParts(x,y,0,0,c,brush) end ,[87]=function(x,y,rx,ry,c,brush) sim.createParts(x,y,0,0,c,brush) end,[128]=function(x,y,rx,ry,c,brush) sim.createParts(x,y,0,0,c,brush) end,[158]=function(x,y,rx,ry,c,brush) sim.createParts(x,y,0,0,c,brush) end}\n"
+"local golStart,golEnd=256,279\n"
+"local wallStart,wallEnd=280,295\n"
+"local toolStart,toolEnd=300,305\n"
+"local decoStart,decoEnd=306,316\n"
+"--Functions that do stuff in powdertoy\n"
+"local function createBoxAny(x1,y1,x2,y2,c,user)\n"
+"    if noShape[c] then return end\n"
+"    if c>=wallStart then\n"
+"        if c<= wallEnd then\n"
+"            sim.createWallBox(x1,y1,x2,y2,c-wallStart)\n"
+"        elseif c<=toolEnd then\n"
+"            if c>=toolStart then sim.toolBox(x1,y1,x2,y2,c-toolStart) end\n"
+"        elseif c<= decoEnd then\n"
+"            sim.decoBox(x1,y1,x2,y2,user.dcolour[2],user.dcolour[3],user.dcolour[4],user.dcolour[1],convertDecoTool(c)-decoStart)\n"
+"        end\n"
+"        return\n"
+"    elseif c>=golStart then\n"
+"        c = 78+(c-golStart)*256\n"
+"    end\n"
+"    sim.createBox(x1,y1,x2,y2,c,user and user.replacemode)\n"
+"end\n"
+"local function createPartsAny(x,y,rx,ry,c,brush,user)\n"
+"    if c>=wallStart then\n"
+"        if c<= wallEnd then\n"
+"            if c == 284 then rx,ry = 0,0 end\n"
+"            sim.createWalls(x,y,rx,ry,c-wallStart,brush)\n"
+"        elseif c<=toolEnd then\n"
+"            if c>=toolStart then sim.toolBrush(x,y,rx,ry,c-toolStart,brush) end\n"
+"        elseif c<= decoEnd then\n"
+"            sim.decoBrush(x,y,rx,ry,user.dcolour[2],user.dcolour[3],user.dcolour[4],user.dcolour[1],convertDecoTool(c)-decoStart,brush)\n"
+"        end\n"
+"        return\n"
+"    elseif c>=golStart then\n"
+"        c = 78+(c-golStart)*256\n"
+"    end\n"
+"    if createOverride[c] then createOverride[c](x,y,rx,ry,c,brush) return end\n"
+"    sim.createParts(x,y,rx,ry,c,brush,user.replacemode)\n"
+"end\n"
+"local function createLineAny(x1,y1,x2,y2,rx,ry,c,brush,user)\n"
+"    if noShape[c] then return end\n"
+"    if jacobsmod and c == tpt.element(\"ball\") and not user.shift then return end\n"
+"    if c>=wallStart then\n"
+"        if c<= wallEnd then\n"
+"            if c == 284 then rx,ry = 0,0 end\n"
+"            sim.createWallLine(x1,y1,x2,y2,rx,ry,c-wallStart,brush)\n"
+"        elseif c<=toolEnd then\n"
+"            if c>=toolStart then local str=1.0 if user.drawtype==4 then if user.shift then str=10.0 elseif user.alt then str=0.1 end end sim.toolLine(x1,y1,x2,y2,rx,ry,c-toolStart,brush,str) end\n"
+"        elseif c<= decoEnd then\n"
+"            sim.decoLine(x1,y1,x2,y2,rx,ry,user.dcolour[2],user.dcolour[3],user.dcolour[4],user.dcolour[1],convertDecoTool(c)-decoStart,brush)\n"
+"        end\n"
+"        return\n"
+"    elseif c>=golStart then\n"
+"        c = 78+(c-golStart)*256\n"
+"    end\n"
+"    sim.createLine(x1,y1,x2,y2,rx,ry,c,brush,user.replacemode)\n"
+"end\n"
+"local function floodAny(x,y,c,cm,bm,user)\n"
+"    if noFlood[c] then return end\n"
+"    if c>=wallStart then\n"
+"        if c<= wallEnd then\n"
+"            sim.floodWalls(x,y,c-wallStart,bm)\n"
+"        end\n"
+"        --other tools shouldn't flood\n"
+"        return\n"
+"    elseif c>=golStart then --GoL adjust\n"
+"        c = 78+(c-golStart)*256\n"
+"    end\n"
+"    sim.floodParts(x,y,c,cm,user.replacemode)\n"
+"end\n"
+"local function lineSnapCoords(x1,y1,x2,y2)\n"
+"    local nx,ny\n"
+"    local snapAngle = math.floor(math.atan2(y2-y1, x2-x1)/(math.pi*0.25)+0.5)*math.pi*0.25;\n"
+"    local lineMag = math.sqrt(math.pow(x2-x1,2)+math.pow(y2-y1,2));\n"
+"    nx = math.floor(lineMag*math.cos(snapAngle)+x1+0.5);\n"
+"    ny = math.floor(lineMag*math.sin(snapAngle)+y1+0.5);\n"
+"    return nx,ny\n"
+"end\n"
+"local function rectSnapCoords(x1,y1,x2,y2)\n"
+"    local nx,ny\n"
+"    local snapAngle = math.floor((math.atan2(y2-y1, x2-x1)+math.pi*0.25)/(math.pi*0.5)+0.5)*math.pi*0.5 - math.pi*0.25;\n"
+"    local lineMag = math.sqrt(math.pow(x2-x1,2)+math.pow(y2-y1,2));\n"
+"    nx = math.floor(lineMag*math.cos(snapAngle)+x1+0.5);\n"
+"    ny = math.floor(lineMag*math.sin(snapAngle)+y1+0.5);\n"
+"    return nx,ny\n"
+"end\n"
+"local renModes = {[0xff00f270]=1,[-16715152]=1,[0x0400f381]=2,[0xf382]=4,[0xf388]=8,[0xf384]=16,[0xfff380]=32,[1]=0xff00f270,[2]=0x0400f381,[4]=0xf382,[8]=0xf388,[16]=0xf384,[32]=0xfff380}\n"
+"local function getViewModes()\n"
+"    local t={0,0,0}\n"
+"    for k,v in pairs(ren.displayModes()) do\n"
+"        t[1] = t[1]+v\n"
+"    end\n"
+"    for k,v in pairs(ren.renderModes()) do\n"
+"        t[2] = t[2]+(renModes[v] or 0)\n"
+"    end\n"
+"    t[3] = ren.colorMode()\n"
+"    return t\n"
+"end\n"
+"--clicky click\n"
+"local function playerMouseClick(id,btn,ev)\n"
+"    local user = con.members[id]\n"
+"    local createE, checkBut\n"
+"    --_print(tostring(btn)..tostring(ev))\n"
+"    if ev==0 then return end\n"
+"    if btn==1 then\n"
+"        user.rbtn,user.abtn = false,false\n"
+"        createE,checkBut=user.selectedl,user.lbtn\n"
+"    elseif btn==2 then\n"
+"        user.rbtn,user.lbtn = false,false\n"
+"        createE,checkBut=user.selecteda,user.abtn\n"
+"    elseif btn==4 then\n"
+"        user.lbtn,user.abtn = false,false\n"
+"        createE,checkBut=user.selectedr,user.rbtn\n"
+"    else return end\n"
+"    if user.mousex>=sim.XRES or user.mousey>=sim.YRES then user.drawtype=false return end\n"
+"    if ev==1 then\n"
+"        user.pmx,user.pmy = user.mousex,user.mousey\n"
+"        if not user.drawtype then\n"
+"            --left box\n"
+"            if user.ctrl and not user.shift then user.drawtype = 2 return end\n"
+"            --left line\n"
+"            if user.shift and not user.ctrl then user.drawtype = 1 return end\n"
+"            --floodfill\n"
+"            if user.ctrl and user.shift then floodAny(user.mousex,user.mousey,createE,-1,-1,user) user.drawtype = 3 return end\n"
+"            --an alt click\n"
+"            if user.alt then return end\n"
+"            user.drawtype=4 --normal hold\n"
+"        end\n"
+"        createPartsAny(user.mousex,user.mousey,user.brushx,user.brushy,createE,user.brush,user)\n"
+"    elseif ev==2 and checkBut and user.drawtype then\n"
+"        if user.drawtype==2 then\n"
+"            if user.alt then user.mousex,user.mousey = rectSnapCoords(user.pmx,user.pmy,user.mousex,user.mousey) end\n"
+"            createBoxAny(user.mousex,user.mousey,user.pmx,user.pmy,createE,user)\n"
+"        else\n"
+"            if user.alt then user.mousex,user.mousey = lineSnapCoords(user.pmx,user.pmy,user.mousex,user.mousey) end\n"
+"            createLineAny(user.mousex,user.mousey,user.pmx,user.pmy,user.brushx,user.brushy,createE,user.brush,user)\n"
+"        end\n"
+"        user.drawtype=false\n"
+"        user.pmx,user.pmy = user.mousex,user.mousey\n"
+"    end\n"
+"end\n"
+"--To draw continued lines\n"
+"local function playerMouseMove(id)\n"
+"    local user = con.members[id]\n"
+"    local createE, checkBut\n"
+"    if user.lbtn then\n"
+"        createE,checkBut=user.selectedl,user.lbtn\n"
+"    elseif user.rbtn then\n"
+"        createE,checkBut=user.selectedr,user.rbtn\n"
+"    elseif user.abtn then\n"
+"        createE,checkBut=user.selecteda,user.abtn\n"
+"    else return end\n"
+"    if user.drawtype~=4 then if user.drawtype==3 then floodAny(user.mousex,user.mousey,createE,-1,-1,user) end return end\n"
+"    if checkBut==3 then\n"
+"        if user.mousex>=sim.XRES then user.mousex=sim.XRES-1 end\n"
+"        if user.mousey>=sim.YRES then user.mousey=sim.YRES-1 end\n"
+"        createLineAny(user.mousex,user.mousey,user.pmx,user.pmy,user.brushx,user.brushy,createE,user.brush,user)\n"
+"        user.pmx,user.pmy = user.mousex,user.mousey\n"
+"    end\n"
+"end\n"
+"local function loadStamp(size,x,y,reset)\n"
+"    con.socket:settimeout(10)\n"
+"    local s = con.socket:receive(size)\n"
+"    con.socket:settimeout(0)\n"
+"    if s then\n"
+"        local f = io.open(\".tmp.stm\",\"wb\")\n"
+"        f:write(s)\n"
+"        f:close()\n"
+"        if reset then sim.clearSim() end\n"
+"        if not sim.loadStamp(\".tmp.stm\",x,y) then\n"
+"            infoText:reset(\"Error loading stamp\")\n"
+"        end\n"
+"        os.remove\".tmp.stm\"\n"
+"    else\n"
+"        infoText:reset(\"Error loading empty stamp\")\n"
+"    end\n"
+"end\n"
+"local function saveStamp(x, y, w, h)\n"
+"    local stampName = sim.saveStamp(x, y, w, h) or \"errorsavingstamp\"\n"
+"    local fullName = \"stamps/\"..stampName..\".stm\"\n"
+"    return stampName, fullName\n"
+"end\n"
+"local function deleteStamp(name)\n"
+"    if sim.deleteStamp then\n"
+"        sim.deleteStamp(name)\n"
+"    else\n"
+"        os.remove(\"stamps/\"..name..\".stm\")\n"
+"    end\n"
+"end\n"
+"local dataCmds = {\n"
+"    [16] = function()\n"
+"    --room members\n"
+"        con.members = {}\n"
+"        local amount = cByte()\n"
+"        local peeps = {}\n"
+"        for i=1,amount do\n"
+"            local id = cByte()\n"
+"            con.members[id]={name=conGetNull(),mousex=0,mousey=0,brushx=4,brushy=4,brush=0,selectedl=1,selectedr=0,selecteda=296,replacemode=0,dcolour={0,0,0,0},lbtn=false,abtn=false,rbtn=false,ctrl=false,shift=false,alt=false}\n"
+"            local name = con.members[id].name\n"
+"            table.insert(peeps,name)\n"
+"        end\n"
+"		CurrentUsers = peeps\n"
+"        chatwindow:addline(\"Online: \"..table.concat(peeps,\" \"),255,255,50)\n"
+"    end,\n"
+"    [17]= function()\n"
+"        local id = cByte()\n"
+"        con.members[id] ={name=conGetNull(),mousex=0,mousey=0,brushx=4,brushy=4,brush=0,selectedl=1,selectedr=0,selecteda=296,replacemode=0,dcolour={0,0,0,0},lbtn=false,abtn=false,rbtn=false,ctrl=false,shift=false,alt=false}\n"
+"        chatwindow:addline(con.members[id].name..\" has joined\",100,255,100)\n"
+"		if mpapi.autogreet and type(mpapi.autogreet) == \"function\" then\n"
+"			mpapi.autogreet(con.members[id].name)\n"
+"        end\n"
+"    end,\n"
+"    [18] = function()\n"
+"        local id = cByte()\n"
+"        chatwindow:addline(con.members[id].name..\" has left\",255,255,100)\n"
+"        con.members[id]=nil\n"
+"    end,\n"
+"    [19] = function()\n"
+"        local m = con.members[cByte()].name; local t = conGetNull()\n"
+"        if mpList['ignore'] and (mpList['ignore']):find(m:lower() .. ',') then return end\n"
+"        if isAFK and t:find(CurrentNick) and t:find(CurrentNick) > 0 then\n"
+"            conSend(20, 'is AFK right now.', true)\n"
+"        end\n"
+"        chatwindow:addline(m .. \": \" .. t)\n"
+"    end,\n"
+"    [20] = function()\n"
+"        local m = con.members[cByte()].name; local t = conGetNull()\n"
+"        if mpList['ignore'] and (mpList['ignore']):find(m:lower() .. ',') then return end\n"
+"        if isAFK and t:find(CurrentNick) and t:find(CurrentNick) > 0 then\n"
+"            conSend(20, 'is AFK right now.', true)\n"
+"        end\n"
+"        chatwindow:addline(\"* \"..m .. \" \" .. t)\n"
+"    end,\n"
+"    [22] = function()\n"
+"        chatwindow:addline(\"[SERVER] \"..conGetNull(), cByte(), cByte(), cByte())\n"
+"    end,\n"
+"    --Mouse Position\n"
+"    [32] = function()\n"
+"        local id = cByte()\n"
+"        local b1,b2,b3=cByte(),cByte(),cByte()\n"
+"        con.members[id].mousex,con.members[id].mousey=((b1*16)+math.floor(b2/16)),((b2%16)*256)+b3\n"
+"        playerMouseMove(id)\n"
+"    end,\n"
+"    --Mouse Click\n"
+"    [33] = function()\n"
+"        local id = cByte()\n"
+"        local d=cByte()\n"
+"        local btn,ev=math.floor(d/16),d%16\n"
+"        playerMouseClick(id,btn,ev)\n"
+"        if ev==0 then return end\n"
+"        if btn==1 then\n"
+"            con.members[id].lbtn=ev\n"
+"        elseif btn==2 then\n"
+"            con.members[id].abtn=ev\n"
+"        elseif btn==4 then\n"
+"            con.members[id].rbtn=ev\n"
+"        end\n"
+"    end,\n"
+"    --Brush size\n"
+"    [34] = function()\n"
+"        local id = cByte()\n"
+"        con.members[id].brushx,con.members[id].brushy=cByte(),cByte()\n"
+"    end,\n"
+"    --Brush Shape change, no args\n"
+"    [35] = function()\n"
+"        local id = cByte()\n"
+"        con.members[id].brush=(con.members[id].brush+1)%3\n"
+"    end,\n"
+"    --Modifier (mod and state)\n"
+"    [36] = function()\n"
+"        local id = cByte()\n"
+"        local d=cByte()\n"
+"        local mod,state=math.floor(d/16),d%16~=0\n"
+"        if mod==0 then\n"
+"            con.members[id].ctrl=state\n"
+"        elseif mod==1 then\n"
+"            con.members[id].shift=state\n"
+"        elseif mod==2 then\n"
+"            con.members[id].alt=state\n"
+"        end\n"
+"    end,\n"
+"    --selected elements (2 bits button, 14-element)\n"
+"    [37] = function()\n"
+"        local id = cByte()\n"
+"        local b1,b2=cByte(),cByte()\n"
+"        local btn,el=math.floor(b1/64),(b1%64)*256+b2\n"
+"        if btn==0 then\n"
+"            con.members[id].selectedl=el\n"
+"        elseif btn==1 then\n"
+"            con.members[id].selecteda=el\n"
+"        elseif btn==2 then\n"
+"            con.members[id].selectedr=el\n"
+"        elseif btn==3 then\n"
+"            --sync replace mode element between all players since apparently you have to set tpt.selectedreplace to use replace mode ...\n"
+"            tpt.selectedreplace = elem.property(el, \"Identifier\")\n"
+"        end\n"
+"    end,\n"
+"    --replace mode / specific delete\n"
+"    [38] = function()\n"
+"        local id = cByte()\n"
+"        local mod = cByte()\n"
+"        con.members[id].replacemode = mod\n"
+"    end,\n"
+"    --cmode defaults (1 byte mode)\n"
+"    [48] = function()\n"
+"        local id = cByte()\n"
+"        tpt.display_mode(cByte())\n"
+"        cmodeText:reset(con.members[id].name..\" set:\")\n"
+"    end,\n"
+"    --pause set (1 byte state)\n"
+"    [49] = function()\n"
+"        local id = cByte()\n"
+"        local p,str = cByte(),\"Pause\"\n"
+"        tpt.set_pause(p)\n"
+"        if p==0 then str=\"Unpause\" end\n"
+"        infoText:reset(str..\" from \"..con.members[id].name)\n"
+"    end,\n"
+"    --step frame, no args\n"
+"    [50] = function()\n"
+"        local id = cByte()\n"
+"        tpt.set_pause(0)\n"
+"        L.pauseNextFrame=true\n"
+"    end,\n"
+"    --deco mode, (1 byte state)\n"
+"    [51] = function()\n"
+"        local id = cByte()\n"
+"        tpt.decorations_enable(cByte())\n"
+"        cmodeText:reset(con.members[id].name..\" set:\")\n"
+"    end,\n"
+"    --[[HUD mode, (1 byte state), deprecated\n"
+"    [52] = function()\n"
+"        local id = cByte()\n"
+"        local hstate = cByte()\n"
+"        tpt.hud(hstate)\n"
+"    end,\n"
+"    --]]\n"
+"    --amb heat mode, (1 byte state)\n"
+"    [53] = function()\n"
+"        local id = cByte()\n"
+"        tpt.ambient_heat(cByte())\n"
+"    end,\n"
+"    --newt_grav mode, (1 byte state)\n"
+"    [54] = function()\n"
+"        local id = cByte()\n"
+"        tpt.newtonian_gravity(cByte())\n"
+"    end,\n"
+"    --[[\n"
+"    --debug mode (1 byte state?) can't implement\n"
+"    [55] = function()\n"
+"        local id = cByte()\n"
+"        --local dstate = cByte()\n"
+"        tpt.setdebug()\n"
+"    end,\n"
+"    --]]\n"
+"    --legacy heat mode, (1 byte state)\n"
+"    [56] = function()\n"
+"        local id = cByte()\n"
+"        tpt.heat(cByte())\n"
+"    end,\n"
+"    --water equal, (1 byte state)\n"
+"    [57] = function()\n"
+"        local id = cByte()\n"
+"        sim.waterEqualisation(cByte())\n"
+"    end,\n"
+"    --grav mode, (1 byte state)\n"
+"    [58] = function()\n"
+"        local id = cByte()\n"
+"        local mode = cByte()\n"
+"        sim.gravityMode(mode)\n"
+"        cmodeText:reset(con.members[id].name..\" set: Gravity: \"..gravList[mode])\n"
+"    end,\n"
+"    --air mode, (1 byte state)\n"
+"    [59] = function()\n"
+"        local id = cByte()\n"
+"        local mode=cByte()\n"
+"        sim.airMode(mode)\n"
+"        cmodeText:reset(con.members[id].name..\" set: Air: \"..airList[mode])\n"
+"    end,\n"
+"    --clear sparks (no args)\n"
+"    [60] = function()\n"
+"        local id = cByte()\n"
+"        tpt.reset_spark()\n"
+"    end,\n"
+"    --clear pressure/vel (no args)\n"
+"    [61] = function()\n"
+"        local id = cByte()\n"
+"        tpt.reset_velocity()\n"
+"        tpt.set_pressure()\n"
+"    end,\n"
+"    --invert pressure (no args)\n"
+"    [62] = function()\n"
+"        local id = cByte()\n"
+"        for x=0,152 do\n"
+"            for y=0,95 do\n"
+"                sim.pressure(x,y,-sim.pressure(x,y))\n"
+"            end\n"
+"        end\n"
+"    end,\n"
+"    --Clearsim button (no args)\n"
+"    [63] = function()\n"
+"        local id = cByte()\n"
+"        sim.clearSim()\n"
+"        L.lastSave=nil\n"
+"        infoText:reset(con.members[id].name..\" cleared the screen\")\n"
+"    end,\n"
+"    --Full graphics view mode (for manual changes in display menu) (3 bytes)\n"
+"    [64] = function()\n"
+"        local id = cByte()\n"
+"        local disM,renM,colM = cByte(),cByte(),cByte()\n"
+"        ren.displayModes({disM})\n"
+"        local t,i={},1\n"
+"        while i<=32 do\n"
+"            if bit.band(renM,i)>0 then table.insert(t,renModes[i]) end\n"
+"            i=i*2\n"
+"        end\n"
+"        ren.renderModes(t)\n"
+"        ren.colorMode(colM)\n"
+"    end,\n"
+"    --Selected deco colour (4 bytes)\n"
+"    [65] = function()\n"
+"        local id = cByte()\n"
+"        con.members[id].dcolour = {cByte(),cByte(),cByte(),cByte()}\n"
+"    end,\n"
+"    --Recieve a stamp, with location (6 bytes location(3),size(3))\n"
+"    [66] = function()\n"
+"        local id = cByte()\n"
+"        local b1,b2,b3=cByte(),cByte(),cByte()\n"
+"        local x,y =((b1*16)+math.floor(b2/16)),((b2%16)*256)+b3\n"
+"        local d = cByte()*65536+cByte()*256+cByte()\n"
+"        loadStamp(d,x,y,false)\n"
+"        infoText:reset(\"Stamp from \"..con.members[id].name)\n"
+"    end,\n"
+"    --Clear an area, helper for cut (6 bytes, start(3), end(3))\n"
+"    [67] = function()\n"
+"        local id = cByte()\n"
+"        local b1,b2,b3,b4,b5,b6=cByte(),cByte(),cByte(),cByte(),cByte(),cByte()\n"
+"        local x1,y1 =((b1*16)+math.floor(b2/16)),((b2%16)*256)+b3\n"
+"        local x2,y2 =((b4*16)+math.floor(b5/16)),((b5%16)*256)+b6\n"
+"        --clear walls and parts\n"
+"        createBoxAny(x1,y1,x2,y2,280)\n"
+"        createBoxAny(x1,y1,x2,y2,0)\n"
+"    end,\n"
+"    --Edge mode (1 byte state)\n"
+"    [68] = function()\n"
+"        local id = cByte()\n"
+"        sim.edgeMode(cByte())\n"
+"    end,\n"
+"    --Load a save ID (3 bytes ID)\n"
+"    [69] = function()\n"
+"        local id = cByte()\n"
+"        local saveID = cByte()*65536+cByte()*256+cByte()\n"
+"        L.lastSave=saveID\n"
+"        sim.loadSave(saveID,1)\n"
+"        L.browseMode=3\n"
+"    end,\n"
+"    --Reload sim(from a stamp right now, no args)\n"
+"    [70] = function()\n"
+"        local id = cByte()\n"
+"        sim.clearSim()\n"
+"        if not sim.loadStamp(\"stamps/tmp.stm\",0,0) then\n"
+"            infoText:reset(\"Error reloading save from \"..con.members[id].name)\n"
+"        end\n"
+"    end,\n"
+"    --A request to sync a player, from server, send screen, and various settings\n"
+"    [128] = function()\n"
+"        local id = cByte()\n"
+"        conSend(130,string.char(id,49,tpt.set_pause()))\n"
+"        local stampName,fullName = saveStamp(0,0,sim.XRES-1,sim.YRES-1)\n"
+"        local f = assert(io.open(fullName,\"rb\"))\n"
+"        local s = f:read\"*a\"\n"
+"        f:close()\n"
+"        deleteStamp(stampName)\n"
+"        local d = #s\n"
+"        conSend(128,string.char(id,math.floor(d/65536),math.floor(d/256)%256,d%256)..s)\n"
+"        conSend(130,string.char(id,53,tpt.ambient_heat()))\n"
+"        conSend(130,string.char(id,54,tpt.newtonian_gravity()))\n"
+"        conSend(130,string.char(id,56,tpt.heat()))\n"
+"        conSend(130,string.char(id,57,sim.waterEqualisation()))\n"
+"        conSend(130,string.char(id,58,sim.gravityMode()))\n"
+"        conSend(130,string.char(id,59,sim.airMode()))\n"
+"        conSend(130,string.char(id,68,sim.edgeMode()))\n"
+"        conSend(64,string.char(unpack(getViewModes())))\n"
+"        conSend(34,string.char(tpt.brushx,tpt.brushy))\n"
+"    end,\n"
+"    --Recieve sync stamp\n"
+"    [129] = function()\n"
+"        local d = cByte()*65536+cByte()*256+cByte()\n"
+"        loadStamp(d,0,0,true)\n"
+"    end,\n"
+"}\n"
+"local function connectThink()\n"
+"    if not con.connected then return end\n"
+"    if not con.socket then disconnected() return end\n"
+"    --read all messages\n"
+"    while 1 do\n"
+"        local s,r = con.socket:receive(1)\n"
+"        if s then\n"
+"            local cmd = string.byte(s)\n"
+"            --_print(\"GOT \"..tostring(cmd))\n"
+"            if dataCmds[cmd] then dataCmds[cmd]() else _print(\"TPTMP: Unknown protocol \"..tostring(cmd),255,20,20) end\n"
+"        else\n"
+"            if r ~= \"timeout\" then disconnected() end\n"
+"            break\n"
+"        end\n"
+"    end\n"
+"    --ping every minute\n"
+"    if os.time()>con.pingTime then conSend(2) con.pingTime=os.time()+60 end\n"
+"end\n"
+"--Track if we have STKM2 out, for WASD key changes\n"
+"elements.property(128,\"Update\",function() L.stick2=true end)\n"
+"local function drawStuff()\n"
+"    if con.members then\n"
+"        for i,user in pairs(con.members) do\n"
+"            local x,y = user.mousex,user.mousey\n"
+"            local brx,bry=user.brushx,user.brushy\n"
+"            local brush,drawBrush=user.brush,true\n"
+"            gfx.drawText(x,y,(\"%s %dx%d\"):format(user.name,brx,bry),0,255,0,192)\n"
+"            if user.drawtype then\n"
+"                if user.drawtype==1 then\n"
+"                    if user.alt then x,y = lineSnapCoords(user.pmx,user.pmy,x,y) end\n"
+"                    tpt.drawline(user.pmx,user.pmy,x,y,0,255,0,128)\n"
+"                elseif user.drawtype==2 then\n"
+"                    if user.alt then x,y = rectSnapCoords(user.pmx,user.pmy,x,y) end\n"
+"                    local tpmx,tpmy = user.pmx,user.pmy\n"
+"                    if tpmx>x then tpmx,x=x,tpmx end\n"
+"                    if tpmy>y then tpmy,y=y,tpmy end\n"
+"                    tpt.drawrect(tpmx,tpmy,x-tpmx,y-tpmy,0,255,0,128)\n"
+"                    drawBrush=false\n"
+"                elseif user.drawtype==3 then\n"
+"                    tpt.drawline(x,y,x+5,y,0,255,0,128)\n"
+"                    tpt.drawline(x,y,x-5,y,0,255,0,128)\n"
+"                    tpt.drawline(x,y,x,y+5,0,255,0,128)\n"
+"                    tpt.drawline(x,y,x,y-5,0,255,0,128)\n"
+"                    drawBrush=false\n"
+"                end\n"
+"            end\n"
+"            if drawBrush then\n"
+"                if brush==0 then\n"
+"                    gfx.drawCircle(x,y,brx,bry,0,255,0,128)\n"
+"                elseif brush==1 then\n"
+"                    gfx.drawRect(x-brx,y-bry,brx*2+1,bry*2+1,0,255,0,128)\n"
+"                elseif brush==2 then\n"
+"                    gfx.drawLine(x-brx,y+bry,x,y-bry,0,255,0,128)\n"
+"                    gfx.drawLine(x-brx,y+bry,x+brx,y+bry,0,255,0,128)\n"
+"                    gfx.drawLine(x,y-bry,x+brx,y+bry,0,255,0,128)\n"
+"                end\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"    for k,v in pairs(fadeText) do\n"
+"        if v.ticks > 0 then\n"
+"            local a = math.floor(255*(v.ticks/v.max))\n"
+"            tpt.drawtext(v.x,v.y,v.text,v.r,v.g,v.b,a)\n"
+"            v.ticks = v.ticks-1\n"
+"        else if not v.keep then table.remove(fadeText,k) end\n"
+"        end\n"
+"    end\n"
+"end\n"
+"local function sendStuff()\n"
+"    if not con.connected then return end\n"
+"    --mouse position every frame, not exactly needed, might be better/more accurate from clicks\n"
+"    local nmx,nmy = tpt.mousex,tpt.mousey\n"
+"    if nmx<sim.XRES and nmy<sim.YRES then nmx,nmy = sim.adjustCoords(nmx,nmy) end\n"
+"    if L.mousex~= nmx or L.mousey~= nmy then\n"
+"        L.mousex,L.mousey = nmx,nmy\n"
+"        local b1,b2,b3 = math.floor(L.mousex/16),((L.mousex%16)*16)+math.floor(L.mousey/256),(L.mousey%256)\n"
+"        conSend(32,string.char(b1,b2,b3))\n"
+"    end\n"
+"    if tpt.brushx > 255 then tpt.brushx = 255 end\n"
+"    if tpt.brushy > 255 then tpt.brushy = 255 end\n"
+"    local nbx,nby = tpt.brushx,tpt.brushy\n"
+"    if L.brushx~=nbx or L.brushy~=nby then\n"
+"        L.brushx,L.brushy = nbx,nby\n"
+"        conSend(34,string.char(L.brushx,L.brushy))\n"
+"    end\n"
+"    --check selected elements\n"
+"    local nsell,nsela,nselr,nselrep = elements[tpt.selectedl] or eleNameTable[tpt.selectedl],elements[tpt.selecteda] or eleNameTable[tpt.selecteda],elements[tpt.selectedr] or eleNameTable[tpt.selectedr],elements[tpt.selectedreplace] or eleNameTable[tpt.selectedreplace]\n"
+"    if L.sell~=nsell then\n"
+"        L.sell=nsell\n"
+"        conSend(37,string.char(math.floor(L.sell/256),L.sell%256))\n"
+"    elseif L.sela~=nsela then\n"
+"        L.sela=nsela\n"
+"        conSend(37,string.char(math.floor(64 + L.sela/256),L.sela%256))\n"
+"    elseif L.selr~=nselr then\n"
+"        L.selr=nselr\n"
+"        conSend(37,string.char(math.floor(128 + L.selr/256),L.selr%256))\n"
+"    elseif L.selrep~=nselrep then\n"
+"        L.selrep=nselrep\n"
+"        conSend(37,string.char(math.floor(192 + L.selrep/256),L.selrep%256))\n"
+"    end\n"
+"    local ncol = sim.decoColour()\n"
+"    if L.dcolour~=ncol then\n"
+"        L.dcolour=ncol\n"
+"        conSend(65,string.char(math.floor(ncol/16777216),math.floor(ncol/65536)%256,math.floor(ncol/256)%256,ncol%256))\n"
+"    end\n"
+"    --Tell others to open this save ID, or send screen if opened local browser\n"
+"    if jacobsmod and L.browseMode and L.browseMode > 3 then\n"
+"        --hacky hack\n"
+"        L.browseMode = L.browseMode - 3\n"
+"    elseif L.browseMode==1 then\n"
+"        --loaded online save\n"
+"        local id=sim.getSaveID()\n"
+"        if L.lastSave~=id then\n"
+"            L.lastSave=id\n"
+"            --save a backup for the reload button\n"
+"            local stampName,fullName = saveStamp(0,0,sim.XRES-1,sim.YRES-1)\n"
+"            os.remove(\"stamps/tmp.stm\") os.rename(fullName,\"stamps/tmp.stm\")\n"
+"            conSend(69,string.char(math.floor(id/65536),math.floor(id/256)%256,id%256))\n"
+"            deleteStamp(stampName)\n"
+"        end\n"
+"        L.browseMode=nil\n"
+"    elseif L.browseMode==2 then\n"
+"        --loaded local save (should probably clear sim first instead?)\n"
+"        L.sendScreen=true\n"
+"        L.browseMode=nil\n"
+"    elseif L.browseMode==3 and L.lastSave==sim.getSaveID() then\n"
+"        L.browseMode=nil\n"
+"        --save this as a stamp for reloading (unless an api function exists to do this)\n"
+"        local stampName,fullName = saveStamp(0,0,sim.XRES-1,sim.YRES-1)\n"
+"        os.remove(\"stamps/tmp.stm\") os.rename(fullName,\"stamps/tmp.stm\")\n"
+"        deleteStamp(stampName)\n"
+"    end\n"
+"    --Send screen (or an area for known size) for stamps\n"
+"    if jacobsmod and L.sendScreen == 2 then\n"
+"        L.sendScreen = true\n"
+"    elseif L.sendScreen then\n"
+"        local x,y,w,h = 0,0,sim.XRES-1,sim.YRES-1\n"
+"        if L.smoved then\n"
+"            local stm\n"
+"            if L.copying then stm=L.lastCopy else stm=L.lastStamp end\n"
+"            if L.rotate then stm.w,stm.h=stm.h,stm.w end\n"
+"            x,y,w,h = math.floor((L.mousex-stm.w/2)/4)*4,math.floor((L.mousey-stm.h/2)/4)*4,stm.w,stm.h\n"
+"            L.smoved=false\n"
+"            L.copying=false\n"
+"        end\n"
+"        L.sendScreen=false\n"
+"        local stampName,fullName = saveStamp(x,y,w,h)\n"
+"        local f = assert(io.open(fullName,\"rb\"))\n"
+"        local s = f:read\"*a\"\n"
+"        f:close()\n"
+"        deleteStamp(stampName)\n"
+"        local d = #s\n"
+"        local b1,b2,b3 = math.floor(x/16),((x%16)*16)+math.floor(y/256),(y%256)\n"
+"        conSend(67,string.char(math.floor(x/16),((x%16)*16)+math.floor(y/256),(y%256),math.floor((x+w)/16),(((x+w)%16)*16)+math.floor((y+h)/256),((y+h)%256)))\n"
+"        conSend(66,string.char(b1,b2,b3,math.floor(d/65536),math.floor(d/256)%256,d%256)..s)\n"
+"    end\n"
+"    --Check if custom modes were changed\n"
+"    if jacobsmod and L.checkRen == 2 then\n"
+"        L.checkRen = true\n"
+"    elseif L.checkRen then\n"
+"        L.checkRen=false\n"
+"        local t,send=getViewModes(),false\n"
+"        for k,v in pairs(t) do\n"
+"            if v~=L.pModes[k] then\n"
+"                send=true break\n"
+"            end\n"
+"        end\n"
+"        if send then conSend(64,string.char(t[1],t[2],t[3])) end\n"
+"    end\n"
+"    --Send option menu settings\n"
+"    if L.checkOpt then\n"
+"        L.checkOpt=false\n"
+"        conSend(56,string.char(tpt.heat()))\n"
+"        conSend(53,string.char(tpt.ambient_heat()))\n"
+"        conSend(54,string.char(tpt.newtonian_gravity()))\n"
+"        conSend(57,string.char(sim.waterEqualisation()))\n"
+"        conSend(58,string.char(sim.gravityMode()))\n"
+"        conSend(59,string.char(sim.airMode()))\n"
+"        conSend(68,string.char(sim.edgeMode()))\n"
+"    end\n"
+"end\n"
+"local function updatePlayers()\n"
+"    if con.members then\n"
+"        for k,v in pairs(con.members) do\n"
+"            playerMouseMove(k)\n"
+"        end\n"
+"    end\n"
+"    --Keep last frame of stick2\n"
+"    L.lastStick2=L.stick2\n"
+"    L.stick2=false\n"
+"end\n"
+"local pressedKeys\n"
+"local function step()\n"
+"    if not L.chatHidden then chatwindow:draw() else showbutton:draw() end\n"
+"    if hooks_enabled then\n"
+"        if pressedKeys and pressedKeys[\"repeat\"] < socket.gettime() then\n"
+"            if pressedKeys[\"repeat\"] < socket.gettime()-.05 then\n"
+"                pressedKeys = nil\n"
+"            else\n"
+"                chatwindow:textprocess(pressedKeys[\"key\"],pressedKeys[\"nkey\"],pressedKeys[\"modifier\"],pressedKeys[\"event\"])\n"
+"                pressedKeys[\"repeat\"] = socket.gettime()+.065\n"
+"            end\n"
+"        end\n"
+"        drawStuff()\n"
+"        sendStuff()\n"
+"        if L.pauseNextFrame then L.pauseNextFrame=false tpt.set_pause(1) end\n"
+"        connectThink()\n"
+"        updatePlayers()\n"
+"    end\n"
+"end\n"
+"--some button locations that emulate tpt, return false will disable button\n"
+"local tpt_buttons = {\n"
+"    [\"open\"] = {x1=1, y1=408, x2=17, y2=422, f=function() if not L.ctrl then L.browseMode=1 else L.browseMode=2 end L.lastSave=sim.getSaveID() end},\n"
+"    [\"rload\"] = {x1=19, y1=408, x2=355, y2=422, firstClick = true, f=function() if L.lastSave then if L.ctrl then infoText:reset(\"If you re-opened the save, please type /sync\") else conSend(70) end else infoText:reset(\"Reloading local saves is not synced currently. Type /sync\") end end},\n"
+"    [\"clear\"] = {x1=470, y1=408, x2=486, y2=422, f=function() conSend(63) L.lastSave=nil end},\n"
+"    [\"opts\"] = {x1=581, y1=408, x2=595, y2=422, f=function() L.checkOpt=true end},\n"
+"    [\"disp\"] = {x1=597, y1=408, x2=611, y2=422, f=function() L.checkRen=true L.pModes=getViewModes() end},\n"
+"    [\"pause\"] = {x1=613, y1=408, x2=627, y2=422, firstClick = true, f=function() conSend(49,tpt.set_pause()==0 and \"\\1\" or \"\\0\") end},\n"
+"    [\"deco\"] = {x1=613, y1=33, x2=627, y2=47, f=function() conSend(51,tpt.decorations_enable()==0 and \"\\1\" or \"\\0\") end},\n"
+"    [\"newt\"] = {x1=613, y1=49, x2=627, y2=63, f=function() conSend(54,tpt.newtonian_gravity()==0 and \"\\1\" or \"\\0\") end},\n"
+"    [\"ambh\"] = {x1=613, y1=65, x2=627, y2=79, f=function() conSend(53,tpt.ambient_heat()==0 and \"\\1\" or \"\\0\") end},\n"
+"}\n"
+"if jacobsmod then\n"
+"    tpt_buttons[\"tab\"] = {x1=613, y1=1, x2=627, y2=15, firstClick = true, f=function() L.tabs = not L.tabs end}\n"
+"    tpt_buttons[\"opts\"] = {x1=470, y1=408, x2=484, y2=422, f=function() L.checkOpt=true end}\n"
+"    tpt_buttons[\"clear\"] = {x1=486, y1=408, x2=502, y2=422, firstClick = true, f=function() conSend(63) L.lastSave=nil end}\n"
+"    tpt_buttons[\"disp\"] = {x1=597, y1=408, x2=611, y2=422, firstClick = true, f=function() L.checkRen=2 L.pModes=getViewModes() end}\n"
+"    tpt_buttons[\"open\"] = {x1=1, y1=408, x2=17, y2=422, firstClick = true, f=function() if not L.ctrl then L.browseMode=4 else L.browseMode=5 end L.lastSave=sim.getSaveID() end}\n"
+"end\n"
+"local function mouseclicky(mousex,mousey,button,event,wheel)\n"
+"    if L.chatHidden then showbutton:process(mousex,mousey,button,event,wheel) if not hooks_enabled then return true end end\n"
+"    if L.stamp and button>0 and button~=2 then\n"
+"        if event==1 and button==1 and L.stampx == -1 then\n"
+"            --initial stamp coords\n"
+"            L.stampx,L.stampy = mousex,mousey\n"
+"        elseif event==2 then\n"
+"            if L.skipClick then L.skipClick=false return true end\n"
+"            --stamp has been saved, make our own copy\n"
+"            if button==1 then\n"
+"                --save stamp ourself for data, delete it\n"
+"                local sx,sy = mousex,mousey\n"
+"                if sx<L.stampx then L.stampx,sx=sx,L.stampx end\n"
+"                if sy<L.stampy then L.stampy,sy=sy,L.stampy end\n"
+"                --cheap cut hook to send a clear\n"
+"                if L.copying==1 then\n"
+"                    --maybe this is ctrl+x? 67 is clear area\n"
+"                    conSend(67,string.char(math.floor(L.stampx/16),((L.stampx%16)*16)+math.floor(L.stampy/256),(L.stampy%256),math.floor(sx/16),((sx%16)*16)+math.floor(sy/256),(sy%256)))\n"
+"                end\n"
+"                local w,h = sx-L.stampx,sy-L.stampy\n"
+"                local stampName,fullName = saveStamp(L.stampx,L.stampy,w,h)\n"
+"                sx,sy,L.stampx,L.stampy = math.ceil((sx+1)/4)*4,math.ceil((sy+1)/4)*4,math.floor(L.stampx/4)*4,math.floor(L.stampy/4)*4\n"
+"                w,h = sx-L.stampx, sy-L.stampy\n"
+"                local f = assert(io.open(fullName,\"rb\"))\n"
+"                if L.copying then L.lastCopy = {data=f:read\"*a\",w=w,h=h} else L.lastStamp = {data=f:read\"*a\",w=w,h=h} end\n"
+"                f:close()\n"
+"                deleteStamp(stampName)\n"
+"            end\n"
+"            L.stamp=false\n"
+"            L.copying=false\n"
+"        end\n"
+"        return true\n"
+"    elseif L.placeStamp and button>0 and button~=2 then\n"
+"        if event==2 then\n"
+"            if L.skipClick then L.skipClick=false return true end\n"
+"            if button==1 then\n"
+"                local stm\n"
+"                if L.copying then stm=L.lastCopy else stm=L.lastStamp end\n"
+"                if stm then\n"
+"                    if not stm.data then\n"
+"                        --unknown stamp, send full screen on next step, how can we read last created stamp, timestamps on files?\n"
+"                        L.sendScreen = (jacobsmod and 2 or true)\n"
+"                    else\n"
+"                        --send the stamp\n"
+"                        if L.smoved then\n"
+"                            --moved from arrows or rotate, send area next frame\n"
+"                            L.placeStamp=false\n"
+"                            L.sendScreen=true\n"
+"                            return true\n"
+"                        end\n"
+"                        local sx,sy = mousex-math.floor(stm.w/2),mousey-math.floor((stm.h)/2)\n"
+"                        if sx<0 then sx=0 end\n"
+"                        if sy<0 then sy=0 end\n"
+"                        if sx+stm.w>sim.XRES-1 then sx=sim.XRES-stm.w end\n"
+"                        if sy+stm.h>sim.YRES-1 then sy=sim.YRES-stm.h end\n"
+"                        local b1,b2,b3 = math.floor(sx/16),((sx%16)*16)+math.floor(sy/256),(sy%256)\n"
+"                        local d = #stm.data\n"
+"                        conSend(66,string.char(b1,b2,b3,math.floor(d/65536),math.floor(d/256)%256,d%256)..stm.data)\n"
+"                    end\n"
+"                end\n"
+"            end\n"
+"            L.placeStamp=false\n"
+"            L.copying=false\n"
+"        end\n"
+"        return true\n"
+"    end\n"
+"    if button > 0 and L.skipClick then L.skipClick=false return true end\n"
+"    if chatwindow:process(mousex,mousey,button,event,wheel) then return false end\n"
+"    if mousex<sim.XRES and mousey<sim.YRES then mousex,mousey = sim.adjustCoords(mousex,mousey) end\n"
+"    local obut,oevnt = L.mButt,L.mEvent\n"
+"    if button~=obut or event~=oevnt then\n"
+"        L.mButt,L.mEvent = button,event\n"
+"        --More accurate mouse from here (because this runs BEFORE step function, it would draw old coords)\n"
+"        local b1,b2,b3 = math.floor(mousex/16),((mousex%16)*16)+math.floor(mousey/256),(mousey%256)\n"
+"        conSend(32,string.char(b1,b2,b3))\n"
+"        L.mousex,L.mousey = mousex,mousey\n"
+"        conSend(33,string.char(L.mButt*16+L.mEvent))\n"
+"    elseif L.mEvent==3 and (L.mousex~=mousex or L.mousey~=mousey) then\n"
+"        local b1,b2,b3 = math.floor(mousex/16),((mousex%16)*16)+math.floor(mousey/256),(mousey%256)\n"
+"        conSend(32,string.char(b1,b2,b3))\n"
+"        L.mousex,L.mousey = mousex,mousey\n"
+"    end\n"
+"    --Temporary SPRK floodfill crash block\n"
+"    if L.shift and L.ctrl and event == 1 and ((button == 1 and L.sell==15) or (button == 4 and L.selr==15) or (button == 2 and L.sela==15)) then\n"
+"        return false\n"
+"    end\n"
+"    --Click inside button first\n"
+"    if button==1 then\n"
+"        if event==1 then\n"
+"            if jacobsmod and (L.tabs or L.ctrl) and mousex>=613 and mousex<=627 and mousey >=17 and mousey<=143 then\n"
+"                L.sendScreen = 2\n"
+"            end\n"
+"            for k,v in pairs(tpt_buttons) do\n"
+"                if mousex>=v.x1 and mousex<=v.x2 and mousey>=v.y1 and mousey<=v.y2 then\n"
+"                    if jacobsmod and tpt_buttons[k].firstClick then\n"
+"                        return tpt_buttons[k].f()~=false\n"
+"                    else\n"
+"                        L.downInside = k\n"
+"                    end\n"
+"                    break\n"
+"                end\n"
+"            end\n"
+"        --Up inside the button we started with\n"
+"        elseif event==2 and L.downInside then\n"
+"            local butt = tpt_buttons[L.downInside]\n"
+"            if (jacobsmod and not butt.firstClick) or (mousex>=butt.x1 and mousex<=butt.x2 and mousey>=butt.y1 and mousey<=butt.y2) then\n"
+"                L.downInside = nil\n"
+"                return butt.f()~=false\n"
+"            end\n"
+"        --Mouse hold, we MUST stay inside button or don't trigger on up\n"
+"        elseif event==3 and L.downInside then\n"
+"            local butt = tpt_buttons[L.downInside]\n"
+"            if mousex<butt.x1 or mousex>butt.x2 or mousey<butt.y1 or mousey>butt.y2 then\n"
+"                L.downInside = nil\n"
+"            end\n"
+"        end\n"
+"    end\n"
+"end\n"
+"local keypressfuncs = {\n"
+"    --TAB\n"
+"    [9] = function() conSend(35) end,\n"
+"    --ESC\n"
+"    [27] = function() if not L.chatHidden then L.chatHidden = true TPTMP.chatHidden = true return false end end,\n"
+"    --space, pause toggle\n"
+"    [32] = function() conSend(49,tpt.set_pause()==0 and \"\\1\" or \"\\0\") end,\n"
+"    --View modes 0-9\n"
+"    [48] = function() conSend(48,\"\\10\") end,\n"
+"    [49] = function() if L.shift then conSend(48,\"\\9\") tpt.display_mode(9)--[[force local display mode, screw debug check for now]] return false end conSend(48,\"\\0\") end,\n"
+"    [50] = function() conSend(48,\"\\1\") end,\n"
+"    [51] = function() conSend(48,\"\\2\") end,\n"
+"    [52] = function() conSend(48,\"\\3\") end,\n"
+"    [53] = function() conSend(48,\"\\4\") end,\n"
+"    [54] = function() conSend(48,\"\\5\") end,\n"
+"    [55] = function() conSend(48,\"\\6\") end,\n"
+"    [56] = function() conSend(48,\"\\7\") end,\n"
+"    [57] = function() conSend(48,\"\\8\") end,\n"
+"    --semicolon / ins / del for replace mode\n"
+"    [59] = function() if L.ctrl then  L.replacemode = bit.bxor(L.replacemode, 2) else  L.replacemode = bit.bxor(L.replacemode, 1) end conSend(38, L.replacemode) end,\n"
+"    [277] = function() L.replacemode = bit.bxor(L.replacemode, 1) conSend(38, L.replacemode) end,\n"
+"    [127] = function() L.replacemode = bit.bxor(L.replacemode, 2) conSend(38, L.replacemode) end,\n"
+"    --= key, pressure/spark reset\n"
+"    [61] = function() if L.ctrl then conSend(60) else conSend(61) end end,\n"
+"    --`, console\n"
+"    [96] = function() if not L.shift and con.connected then infoText:reset(\"Console does not sync, use shift+` to open instead\") return false end end,\n"
+"    --b , deco, pauses sim\n"
+"    [98] = function() if L.ctrl then conSend(51,tpt.decorations_enable()==0 and \"\\1\" or \"\\0\") else conSend(49,\"\\1\") conSend(51,\"\\1\") end end,\n"
+"    --c , copy\n"
+"    [99] = function() if L.ctrl then L.stamp=true L.copying=true L.stampx = -1 L.stampy = -1 end end,\n"
+"    --d key, debug, api broken right now\n"
+"    --[100] = function() conSend(55) end,\n"
+"    --F , frame step\n"
+"    [102] = function() if not jacobsmod or (not L.ctrl and not L.shift) then conSend(50) end end,\n"
+"    --H , HUD and intro text\n"
+"    [104] = function() if L.ctrl and jacobsmod then return false end end,\n"
+"    --I , invert pressure\n"
+"    [105] = function() conSend(62) end,\n"
+"    --K , stamp menu, abort our known stamp, who knows what they picked, send full screen?\n"
+"    [107] = function() L.lastStamp={data=nil,w=0,h=0} L.placeStamp=true end,\n"
+"    --L , last Stamp\n"
+"    [108] = function() if L.lastStamp then L.placeStamp=true end end,\n"
+"    --N , newtonian gravity or new save\n"
+"    [110] = function() if jacobsmod and L.ctrl then L.sendScreen=2 L.lastSave=nil else conSend(54,tpt.newtonian_gravity()==0 and \"\\1\" or \"\\0\") end end,\n"
+"    --O, old menu in jacobs mod\n"
+"    [111] = function() if jacobsmod and not L.ctrl then if tpt.oldmenu()==0 then showbutton:onmove(0, 256) else showbutton:onmove(0, -256) end end end,\n"
+"    --R , for stamp rotate\n"
+"    [114] = function() if L.placeStamp then L.smoved=true if L.shift then return end L.rotate=not L.rotate elseif L.ctrl then conSend(70) end end,\n"
+"    --S, stamp\n"
+"    [115] = function() if (L.lastStick2 and not L.ctrl) or (jacobsmod and L.ctrl) then return end L.stamp=true L.stampx = -1 L.stampy = -1 end,\n"
+"    --T, tabs\n"
+"    [116] = function() if jacobsmod then L.tabs = not L.tabs end end,\n"
+"    --U, ambient heat toggle\n"
+"    [117] = function() conSend(53,tpt.ambient_heat()==0 and \"\\1\" or \"\\0\") end,\n"
+"    --V, paste the copystamp\n"
+"    [118] = function()\n"
+"if L.ctrl and L.lastCopy then L.placeStamp=true L.copying=true end end,\n"
+"    --X, cut a copystamp and clear\n"
+"    [120] = function() if L.ctrl then L.stamp=true L.copying=1 L.stampx = -1 L.stampy = -1 end end,\n"
+"    --W,Y (grav mode, air mode)\n"
+"    [119] = function() if L.lastStick2 and not L.ctrl then return end conSend(58,string.char((sim.gravityMode()+1)%3)) return true end,\n"
+"    [121] = function() conSend(59,string.char((sim.airMode()+1)%5)) return true end,\n"
+"    --Z\n"
+"    [122] = function() myZ=true L.skipClick=true end,\n"
+"    --Arrows for stamp adjust\n"
+"    [273] = function() if L.placeStamp then L.smoved=true end end,\n"
+"    [274] = function() if L.placeStamp then L.smoved=true end end,\n"
+"    [275] = function() if L.placeStamp then L.smoved=true end end,\n"
+"    [276] = function() if L.placeStamp then L.smoved=true end end,\n"
+"    --F1 , intro text\n"
+"    [282] = function() if jacobsmod then return false end end,\n"
+"    --F5 , save reload\n"
+"    [286] = function() conSend(70) end,\n"
+"    --SHIFT,CTRL,ALT\n"
+"    [303] = function() L.shift=true conSend(36,string.char(17)) end,\n"
+"    [304] = function() L.shift=true conSend(36,string.char(17)) end,\n"
+"    [305] = function() L.ctrl=true conSend(36,string.char(1)) end,\n"
+"    [306] = function() L.ctrl=true conSend(36,string.char(1)) end,\n"
+"    [307] = function() L.alt=true conSend(36,string.char(33)) end,\n"
+"    [308] = function() L.alt=true conSend(36,string.char(33)) end,\n"
+"}\n"
+"local keyunpressfuncs = {\n"
+"    --Z\n"
+"    [122] = function() myZ=false L.skipClick=false if L.alt then L.skipClick=true end end,\n"
+"    --SHIFT,CTRL,ALT\n"
+"    [303] = function() L.shift=false conSend(36,string.char(16)) end,\n"
+"    [304] = function() L.shift=false conSend(36,string.char(16)) end,\n"
+"    [305] = function() L.ctrl=false conSend(36,string.char(0)) end,\n"
+"    [306] = function() L.ctrl=false conSend(36,string.char(0)) end,\n"
+"    [307] = function() L.alt=false conSend(36,string.char(32)) end,\n"
+"    [308] = function() L.alt=false conSend(36,string.char(32)) end,\n"
+"}\n"
+"local function keyclicky(key,nkey,modifier,event)\n"
+"    if not hooks_enabled then\n"
+"        if jacobsmod and not L.ctrl and key == 'o' and event == 1 then if tpt.oldmenu()==0 then showbutton:onmove(0, 256) else showbutton:onmove(0, -256) end end\n"
+"        return\n"
+"    end\n"
+"    if chatwindow.inputbox.focus then\n"
+"        if event==1 and key=='v' and (modifier == 4160 or modifier == 64) then\n"
+"            chatwindow:addtext(tpt.get_clipboard(), 1) return\n"
+"        elseif event == 1 and nkey~=13 and nkey~=27 then\n"
+"            pressedKeys = {[\"repeat\"] = socket.gettime()+.6, [\"key\"] = key, [\"nkey\"] = nkey, [\"modifier\"] = modifier, [\"event\"] = event}\n"
+"        elseif event == 2 and pressedKeys and nkey == pressedKeys[\"nkey\"] then\n"
+"            pressedKeys = nil\n"
+"        end\n"
+"    end\n"
+"    local check = chatwindow:textprocess(key,nkey,modifier,event)\n"
+"    if type(check)==\"boolean\" then return not check end\n"
+"    --_print(nkey)\n"
+"    local ret\n"
+"    if event==1 then\n"
+"        if keypressfuncs[nkey] then\n"
+"            ret = keypressfuncs[nkey]()\n"
+"        end\n"
+"    elseif event==2 then\n"
+"        if keyunpressfuncs[nkey] then\n"
+"            ret = keyunpressfuncs[nkey]()\n"
+"        end\n"
+"    end\n"
+"    if ret~= nil then return ret end\n"
+"end\n"
+"function TPTMP.disableMultiplayer()\n"
+"    tpt.unregister_step(step)\n"
+"    tpt.unregister_mouseclick(mouseclicky)\n"
+"    tpt.unregister_keypress(keyclicky)\n"
+"    TPTMP = nil\n"
+"    disconnected(\"TPTMP unloaded\")\n"
+"end\n"
+"function TPTMP.enableMultiplayer()\n"
+"    hooks_enabled = true\n"
+"    TPTMP.enableMultiplayer = nil\n"
+"    debug.sethook(nil,\"\",0)\n"
+"    if jacobsmod then\n"
+"        --clear intro text tooltip\n"
+"        gfx.toolTip(\"\", 0, 0, 0, 4)\n"
+"    end\n"
+"end\n"
+"TPTMP.con = con\n"
+"TPTMP.chatHidden = true\n"
+"tpt.register_step(step)\n"
+"tpt.register_mouseclick(mouseclicky)\n"
+;
+#endif

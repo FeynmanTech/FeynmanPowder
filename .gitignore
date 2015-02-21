@@ -1,0 +1,9 @@
+.git/*
+.gitattributes/*
+.sconf-temp/*
+.gitignore~
+FeynmanPowder
+FeynmanPowder_mac
+*.exe
+site_scons/*
+build/*
