@@ -283,6 +283,22 @@ TPT_INLINE void PIXELMETHODS_CLASS::xor_pixel(int x, int y)
 		vid[y*(VIDXRES)+x] = PIXPACK(0x404040);
 }
 
+int PIXELMETHODS_CLASS::getr(int x, int y)
+{
+	pixel t = vid[y*(VIDXRES)+x];
+	return PIXR(t);
+}
+int PIXELMETHODS_CLASS::getg(int x, int y)
+{
+	pixel t = vid[y*(VIDXRES)+x];
+	return PIXG(t);
+}
+int PIXELMETHODS_CLASS::getb(int x, int y)
+{
+	pixel t = vid[y*(VIDXRES)+x];
+	return PIXB(t);
+}
+
 void PIXELMETHODS_CLASS::blendpixel(int x, int y, int r, int g, int b, int a)
 {
 	pixel t;

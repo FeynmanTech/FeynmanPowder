@@ -2728,6 +2728,9 @@ void LuaScriptInterface::initGraphicsAPI()
 		{"fillCircle", graphics_fillCircle},
 		{"getColors", graphics_getColors},
 		{"getHexColor", graphics_getHexColor},
+		#ifndef OGLI
+		{"getPixel", graphics_getPixel},
+		#endif
 		//{"plotText", graphics_plotText},
 		{NULL, NULL}
 	};
@@ -2924,6 +2927,22 @@ int LuaScriptInterface::graphics_getHexColor(lua_State * l)
 	lua_pushinteger(l, color);
 	return 1;
 }
+#ifndef OGLI
+int LuaScriptInterface::graphics_getPixel(lua_State * l)
+{
+	int x = lua_tointeger(l, 1);
+	int y = lua_tointeger(l, 2);
+
+	int r = luacon_g->getr(x, y);
+	int g = luacon_g->getg(x, y);
+	int b = luacon_g->getb(x, y);
+
+	lua_pushinteger(l, r);
+	lua_pushinteger(l, g);
+	lua_pushinteger(l, b);
+	return 3;
+}
+#endif
 
 void LuaScriptInterface::initFileSystemAPI()
 {

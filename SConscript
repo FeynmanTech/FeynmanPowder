@@ -242,6 +242,7 @@ def findLibs(env, conf):
 				except:
 					pass
 
+
 	#look for SDL.h
 	if not GetOption('renderer') and not conf.CheckCHeader('SDL.h'):
 		if conf.CheckCHeader('SDL/SDL.h'):
@@ -345,6 +346,7 @@ def findLibs(env, conf):
 				FatalError("libGL not found or not installed")
 			try:
 				env.ParseConfig('pkg-config --libs glew gl glu')
+				env.ParseConfig('pkg-config --cflags glew gl glu')
 			except:
 				FatalError(sys.exc_info()[0])
 				
@@ -490,7 +492,7 @@ if GetOption('opengl') or GetOption('opengl-renderer'):
 
 if GetOption('renderer'):
 	env.Append(CPPDEFINES=['RENDERER'])
-else:
+elif not GetOption('opengl'):
 	env.Append(CPPDEFINES=['USE_SDL'])
 
 if GetOption("wall"):

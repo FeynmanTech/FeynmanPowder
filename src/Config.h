@@ -23,8 +23,8 @@
 
 #ifndef MOD_SAVE_VERSION
 #define MOD_SAVE_VERSION 7
-#define MOD_SAVE_VERSION_STRING "7.7"
-#define MOD_MINOR_VERSION 7
+#define MOD_SAVE_VERSION_STRING "7.9"
+#define MOD_MINOR_VERSION 9
 #endif
 
 #ifndef MINOR_VERSION
@@ -109,7 +109,7 @@
 #endif
 
 //Number of asynchronous connections used to retrieve thumbnails
-#define IMGCONNS 5
+#define IMGCONNS 10
 
 #ifdef RENDERER
 #define MENUSIZE 0

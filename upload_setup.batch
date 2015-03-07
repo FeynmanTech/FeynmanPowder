@@ -1,0 +1,3 @@
+cd public_html
+cd Release
+mkdir 7.9

@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
-#if defined(OGLI)
+#ifdef OGLI
 #include "OpenGLHeaders.h"
 #endif
 #include "Config.h"
@@ -217,6 +217,9 @@ public:
 	void Acquire();
 	void Release();
 
+	int getr(int x, int y);
+	int getg(int x, int y);
+	int getb(int x, int y);
 	void blendpixel(int x, int y, int r, int g, int b, int a);
 	void addpixel(int x, int y, int r, int g, int b, int a);
 

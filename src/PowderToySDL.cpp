@@ -37,6 +37,7 @@ extern "C" {
 
 #include "client/GameSave.h"
 #include "client/SaveFile.h"
+#include "simulation/Simulation.h"
 #include "simulation/SaveRenderer.h"
 #include "client/Client.h"
 #include "Misc.h"
@@ -726,13 +727,15 @@ bool SaveWindowPosition()
 #endif
 
 void BlueScreen(const char * detailMessage){
+	GameController * gc = new GameController();
+	std::string StampName = gc->StampRegion(ui::Point(4, 4), ui::Point(XRES - 4, YRES - 4));
 	ui::Engine * engine = &ui::Engine::Ref();
 	engine->g->fillrect(0, 0, engine->GetWidth(), engine->GetHeight(), 17, 114, 169, 210);
 
 	std::string errorTitle = "ERROR";
 	std::string errorDetails = "Details: " + std::string(detailMessage);
 	std::string errorHelp = "An unrecoverable fault has occured, please report the error by visiting the website below\n"
-		"http://" SERVER;
+		"http://" SERVER "\nThe current simulation has been saved to a stamp: " + StampName;
 	int currentY = 0, width, height;
 	int errorWidth = 0;
 	Graphics::textsize(errorHelp.c_str(), errorWidth, height);

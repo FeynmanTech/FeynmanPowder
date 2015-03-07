@@ -4,7 +4,7 @@ static const char *introTextData =
 #ifdef TPTNET
 	"\blTPTNet\n"
 #endif
-	"\btMost recent changes: New deco tool: EASE - used for smoothly merging colors.\n"
+	"\bbMost recent changes: LuaJIT integration, script manager update\n"
 	"\bgControl+C/V/X are Copy, Paste and cut respectively.\n"
 	"\bgTo choose a material, hover over one of the icons on the right, it will show a selection of elements in that group.\n"
 	"\bgPick your material from the menu using mouse left/right buttons.\n"
@@ -23,7 +23,8 @@ static const char *introTextData =
 	"\n"
 	"Contributors: \bgStanislaw K Skowronek (Designed the original Powder Toy),\n"
 	"\bgSimon Robertshaw, Skresanov Savely, cracker64, Catelite, Bryan Hoyle, Nathan Cousins, jacksonmj,\n"
-	"\bgFelix Wallin, Lieuwe Mosch, Anthony Boot, Matthew \"me4502\", MaksProg, jacob1, mniip\nWolfy1339 - Server hosting"
+	"\bgFelix Wallin, Lieuwe Mosch, Anthony Boot, Matthew \"me4502\", MaksProg, jacob1, mniip\n"
+	"\brWolfy1339 - Shared server hosting\n"
 	"\n"
 #ifndef TPTNET
 	"\bgTo use online features such as saving, you need to register at: \brhttp://powdertoy.co.uk/Register.html\n"

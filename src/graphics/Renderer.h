@@ -128,6 +128,10 @@ public:
 	void xor_rect(int x, int y, int width, int height);
 	void xor_bitmap(unsigned char * bitmap, int x, int y, int w, int h);
 
+	int getr(int x, int y);
+	int getg(int x, int y);
+	int getb(int x, int y);
+
 	void draw_line(int x, int y, int x2, int y2, int r, int g, int b, int a);
 	void drawrect(int x, int y, int width, int height, int r, int g, int b, int a);
 	void fillrect(int x, int y, int width, int height, int r, int g, int b, int a);

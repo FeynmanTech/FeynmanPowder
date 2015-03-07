@@ -138,6 +138,9 @@ class LuaScriptInterface: public CommandInterface
 	static int graphics_getColors(lua_State * l);
 	static int graphics_getHexColor(lua_State * l);
 	static int graphics_noise(lua_State * l);
+	#ifndef OGLI
+	static int graphics_getPixel(lua_State * l);
+	#endif
 	//static int graphics_plotText(lua_State * l);
 
 	void initFileSystemAPI();
