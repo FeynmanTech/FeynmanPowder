@@ -5,6 +5,7 @@
 #include "gui/interface/Textbox.h"
 #include "gui/interface/Keys.h"
 #include "gui/Style.h"
+#include "client/Client.h"
 
 class LoginView::LoginAction : public ui::ButtonAction
 {

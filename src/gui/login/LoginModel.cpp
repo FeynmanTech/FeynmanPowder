@@ -1,4 +1,5 @@
 #include "LoginModel.h"
+#include <stdio.h>
 
 LoginModel::LoginModel():
 	currentUser(0, "")
@@ -10,7 +11,9 @@ void LoginModel::Login(string username, string password)
 {
 	statusText = "Logging in...";
 	loginStatus = false;
+	printf("%s\n", "Notifying...");
 	notifyStatusChanged();
+	printf("%s\n", "Logging in...");
 	LoginStatus status = Client::Ref().Login(username, password, currentUser);
 	switch(status)
 	{

@@ -37,12 +37,14 @@
 
 #include "simulation/SaveRenderer.h"
 #include "gui/interface/Point.h"
+#include "gui/game/GameModel.h"
 #include "client/SaveInfo.h"
 #include "client/SaveFile.h"
 #include "client/GameSave.h"
 #include "client/UserInfo.h"
 #include "gui/search/Thumbnail.h"
 #include "gui/preview/Comment.h"
+#include "gui/login/LoginController.h"
 #include "ClientListener.h"
 #include "requestbroker/RequestBroker.h"
 #include "requestbroker/WebRequest.h"
@@ -67,6 +69,11 @@ void writeUserPreferences(const char * prefData);
 
 int isNet = 0;
 
+std::string passwordNet = "none";
+std::string passwordOff = "none";
+
+std::string sessionKeyNet = "";
+std::string sessionKeyOff = "";
 
 Client::Client():
 	authUser(0, ""),
@@ -107,10 +114,27 @@ Client::Client():
 			try
 			{
 				json::Reader::Read(configDocument, configFile);
-				authUser.ID = ((json::Number)(configDocument["User"]["ID"])).Value();
-				authUser.SessionID = ((json::String)(configDocument["User"]["SessionID"])).Value();
-				authUser.SessionKey = ((json::String)(configDocument["User"]["SessionKey"])).Value();
-				authUser.Username = ((json::String)(configDocument["User"]["Username"])).Value();
+				authUser.IDOff = ((json::Number)(configDocument["User"]["ID"])).Value();
+				authUser.SessionIDOff = ((json::String)(configDocument["User"]["SessionID"])).Value();
+				authUser.SessionKeyOff = ((json::String)(configDocument["User"]["SessionKey"])).Value();
+				authUser.UsernameOff = ((json::String)(configDocument["User"]["Username"])).Value();
+
+				authUser.IDNet = ((json::Number)(configDocument["User"]["IDNet"])).Value();
+				authUser.SessionIDNet = ((json::String)(configDocument["User"]["SessionIDNet"])).Value();
+				authUser.SessionKeyNet = ((json::String)(configDocument["User"]["SessionKeyNet"])).Value();
+				authUser.UsernameNet = ((json::String)(configDocument["User"]["UsernameNet"])).Value();
+
+				if (isNet == 1) {
+					authUser.ID = ((json::Number)(configDocument["User"]["IDNet"])).Value();
+					authUser.SessionID = ((json::String)(configDocument["User"]["SessionIDNet"])).Value();
+					authUser.SessionKey = ((json::String)(configDocument["User"]["SessionKeyNet"])).Value();
+					authUser.Username = ((json::String)(configDocument["User"]["UsernameNet"])).Value();
+				} else {
+					authUser.ID = ((json::Number)(configDocument["User"]["ID"])).Value();
+					authUser.SessionID = ((json::String)(configDocument["User"]["SessionID"])).Value();
+					authUser.SessionKey = ((json::String)(configDocument["User"]["SessionKey"])).Value();
+					authUser.Username = ((json::String)(configDocument["User"]["Username"])).Value();
+				}
 
 				std::string userElevation = ((json::String)(configDocument["User"]["Elevation"])).Value();
 				if(userElevation == "Admin")
@@ -834,6 +858,12 @@ void Client::WritePrefs()
 			configDocument["User"]["SessionID"] = json::String(authUser.SessionID);
 			configDocument["User"]["SessionKey"] = json::String(authUser.SessionKey);
 			configDocument["User"]["Username"] = json::String(authUser.Username);
+
+			configDocument["User"]["IDNet"] = json::Number(authUser.IDNet);
+			configDocument["User"]["SessionIDNet"] = json::String(authUser.SessionIDNet);
+			configDocument["User"]["SessionKeyNet"] = json::String(authUser.SessionKeyNet);
+			configDocument["User"]["UsernameNet"] = json::String(authUser.UsernameNet);
+
 			if(authUser.UserElevation == User::ElevationAdmin)
 				configDocument["User"]["Elevation"] = json::String("Admin");
 			else if(authUser.UserElevation == User::ElevationModerator)
@@ -1203,6 +1233,18 @@ RequestStatus Client::ExecVote(int saveID, int direction)
 void Client::SetServer(int net)
 {
 	isNet = net;
+	//User u = User(0, "");
+	LoginController lc;
+	if (net == 1)
+	{
+		printf("TPTNET\nUsername: %s\nPassword: %s\n", authUser.UsernameNet.c_str(), passwordNet.c_str());
+		lc.Login(authUser.UsernameNet, passwordNet);
+	}
+	else
+	{
+		printf("OFFICIAL\nUsername: %s\nPassword: %s\n", authUser.UsernameOff.c_str(), passwordOff.c_str());
+		lc.Login(authUser.UsernameOff, passwordOff);
+	}
 }
 
 int Client::GetServer()
@@ -1364,6 +1406,7 @@ RequestBroker::Request * Client::GetUserInfoAsync(std::string username)
 
 LoginStatus Client::Login(std::string username, std::string password, User & user)
 {
+
 	lastError = "";
 	std::stringstream hashStream;
 	char passwordHash[33];
@@ -1373,6 +1416,18 @@ LoginStatus Client::Login(std::string username, std::string password, User & use
 	user.Username = "";
 	user.SessionID = "";
 	user.SessionKey = "";
+
+	user.IDNet = authUser.IDNet;
+	user.UsernameNet = authUser.UsernameNet;
+	user.SessionIDNet = authUser.SessionIDNet;
+	user.SessionKeyNet = authUser.SessionKeyNet;
+
+	//*
+	user.IDOff = authUser.IDOff;
+	user.UsernameOff = authUser.UsernameOff;
+	user.SessionIDOff = authUser.SessionIDOff;
+	user.SessionKeyOff = authUser.SessionKeyOff;
+	//*/
 
 	//Doop
 	md5_ascii(passwordHash, (const unsigned char *)password.c_str(), password.length());
@@ -1403,9 +1458,13 @@ LoginStatus Client::Login(std::string username, std::string password, User & use
 			free(data);
 			if(tempStatus.Value() == 1)
 			{
-				json::Number userIDTemp = objDocument["UserID"];
-				json::String sessionIDTemp = objDocument["SessionID"];
-				json::String sessionKeyTemp = objDocument["SessionKey"];
+				json::Number userIDTemp;
+				json::String sessionIDTemp;
+				json::String sessionKeyTemp;
+				userIDTemp = objDocument["UserID"];
+				sessionIDTemp = objDocument["SessionID"];
+				sessionKeyTemp = objDocument["SessionKey"];
+				
 				json::String userElevationTemp = objDocument["Elevation"];
 
 				json::Array notificationsArray = objDocument["Notifications"];
@@ -1417,11 +1476,33 @@ LoginStatus Client::Login(std::string username, std::string password, User & use
 					std::pair<std::string, std::string> item = std::pair<std::string, std::string>(notificationText.Value(), notificationLink.Value());
 					AddServerNotification(item);
 				}
-
+				if (isNet == 1) {
+					user.UsernameNet = username;
+					user.IDNet = userIDTemp.Value();
+					user.SessionIDNet = sessionIDTemp.Value();
+					user.SessionKeyNet = sessionKeyTemp.Value();
+				} else {
+					user.UsernameOff = username;
+					user.IDOff = userIDTemp.Value();
+					user.SessionIDOff = sessionIDTemp.Value();
+					user.SessionKeyOff = sessionKeyTemp.Value();
+				}
 				user.Username = username;
 				user.ID = userIDTemp.Value();
 				user.SessionID = sessionIDTemp.Value();
 				user.SessionKey = sessionKeyTemp.Value();
+				printf("Logging in: %s\n", user.Username.c_str());
+				printf("ID: %d, SessionKey: %s\n", user.ID, user.SessionKey.c_str());
+				if (isNet == 1)
+				{
+					passwordNet = password;
+					sessionKeyNet = sessionKeyTemp.Value();
+				}
+				else
+				{
+					passwordOff = password;
+					sessionKeyOff = sessionKeyTemp.Value();
+				}
 				std::string userElevation = userElevationTemp.Value();
 				if(userElevation == "Admin")
 					user.UserElevation = User::ElevationAdmin;
@@ -1467,7 +1548,10 @@ RequestStatus Client::DeleteSave(int saveID)
 	std::stringstream urlStream;
 	char * data = NULL;
 	int dataStatus, dataLength;
-	urlStream << "http://" << serverUsed << "/Browse/Delete.json?ID=" << saveID << "&Mode=Delete&Key=" << authUser.SessionKey;
+	if (isNet == 1)
+		urlStream << "http://" << serverUsed << "/Browse/Delete.json?ID=" << saveID << "&Mode=Delete&Key=" << sessionKeyNet;
+	else
+		urlStream << "http://" << serverUsed << "/Browse/Delete.json?ID=" << saveID << "&Mode=Delete&Key=" << sessionKeyOff;
 	if(authUser.ID)
 	{
 		std::stringstream userIDStream;
@@ -1594,7 +1678,10 @@ RequestStatus Client::FavouriteSave(int saveID, bool favourite)
 	std::stringstream urlStream;
 	char * data = NULL;
 	int dataStatus, dataLength;
-	urlStream << "http://" << serverUsed << "/Browse/Favourite.json?ID=" << saveID << "&Key=" << authUser.SessionKey;
+	if (isNet == 1)
+		urlStream << "http://" << serverUsed << "/Browse/Favourite.json?ID=" << saveID << "&Key=" << sessionKeyNet;
+	else
+		urlStream << "http://" << serverUsed << "/Browse/Favourite.json?ID=" << saveID << "&Key=" << sessionKeyOff;
 	if(!favourite)
 		urlStream << "&Mode=Remove";
 	if(authUser.ID)
@@ -1658,7 +1745,10 @@ RequestStatus Client::ReportSave(int saveID, std::string message)
 	std::stringstream urlStream;
 	char * data = NULL;
 	int dataStatus, dataLength;
-	urlStream << "http://" << serverUsed << "/Browse/Report.json?ID=" << saveID << "&Key=" << authUser.SessionKey;
+	if (isNet == 1)
+		urlStream << "http://" << serverUsed << "/Browse/Report.json?ID=" << saveID << "&Key=" << sessionKeyNet;
+	else
+		urlStream << "http://" << serverUsed << "/Browse/Report.json?ID=" << saveID << "&Key=" << sessionKeyOff;
 	if(authUser.ID)
 	{
 		std::stringstream userIDStream;
@@ -1724,7 +1814,10 @@ RequestStatus Client::UnpublishSave(int saveID)
 	std::stringstream urlStream;
 	char * data = NULL;
 	int dataStatus, dataLength;
-	urlStream << "http://" << serverUsed << "/Browse/Delete.json?ID=" << saveID << "&Mode=Unpublish&Key=" << authUser.SessionKey;
+	if (isNet == 1)
+		urlStream << "http://" << serverUsed << "/Browse/Delete.json?ID=" << saveID << "&Mode=Unpublish&Key=" << sessionKeyNet;
+	else
+		urlStream << "http://" << serverUsed << "/Browse/Delete.json?ID=" << saveID << "&Mode=Unpublish&Key=" << sessionKeyOff;
 	if(authUser.ID)
 	{
 		std::stringstream userIDStream;
@@ -2410,7 +2503,10 @@ std::list<std::string> * Client::RemoveTag(int saveID, std::string tag)
 		serverUsed = OLDSERVER;
 		
 	}
-	urlStream << "http://" << serverUsed << "/Browse/EditTag.json?Op=delete&ID=" << saveID << "&Tag=" << tag << "&Key=" << authUser.SessionKey;;
+	if (isNet == 1)
+		urlStream << "http://" << serverUsed << "/Browse/EditTag.json?Op=delete&ID=" << saveID << "&Tag=" << tag << "&Key=" << sessionKeyNet;
+	else
+		urlStream << "http://" << serverUsed << "/Browse/EditTag.json?Op=delete&ID=" << saveID << "&Tag=" << tag << "&Key=" << sessionKeyOff;
 	if(authUser.ID)
 	{
 		std::stringstream userIDStream;
@@ -2479,7 +2575,10 @@ std::list<std::string> * Client::AddTag(int saveID, std::string tag)
 		serverUsed = OLDSERVER;
 		
 	}
-	urlStream << "http://" << serverUsed << "/Browse/EditTag.json?Op=add&ID=" << saveID << "&Tag=" << tag << "&Key=" << authUser.SessionKey;
+	if (isNet == 1)
+		urlStream << "http://" << serverUsed << "/Browse/EditTag.json?Op=add&ID=" << saveID << "&Tag=" << tag << "&Key=" << sessionKeyNet;
+	else
+		urlStream << "http://" << serverUsed << "/Browse/EditTag.json?Op=add&ID=" << saveID << "&Tag=" << tag << "&Key=" << sessionKeyOff;
 	if(authUser.ID)
 	{
 		std::stringstream userIDStream;
