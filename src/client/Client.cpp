@@ -114,27 +114,33 @@ Client::Client():
 			try
 			{
 				json::Reader::Read(configDocument, configFile);
+				/*
 				authUser.IDOff = ((json::Number)(configDocument["User"]["ID"])).Value();
 				authUser.SessionIDOff = ((json::String)(configDocument["User"]["SessionID"])).Value();
 				authUser.SessionKeyOff = ((json::String)(configDocument["User"]["SessionKey"])).Value();
 				authUser.UsernameOff = ((json::String)(configDocument["User"]["Username"])).Value();
+				*/
 
 				authUser.IDNet = ((json::Number)(configDocument["User"]["IDNet"])).Value();
 				authUser.SessionIDNet = ((json::String)(configDocument["User"]["SessionIDNet"])).Value();
 				authUser.SessionKeyNet = ((json::String)(configDocument["User"]["SessionKeyNet"])).Value();
-				authUser.UsernameNet = ((json::String)(configDocument["User"]["UsernameNet"])).Value();
+				authUser.UsernameNet = ((json::String)(configDocument["User"]["NetUsername"])).Value();
+				authUser.UsernameOff = ((json::String)(configDocument["User"]["OffUsername"])).Value();
 
 				if (isNet == 1) {
 					authUser.ID = ((json::Number)(configDocument["User"]["IDNet"])).Value();
-					authUser.SessionID = ((json::String)(configDocument["User"]["SessionIDNet"])).Value();
-					authUser.SessionKey = ((json::String)(configDocument["User"]["SessionKeyNet"])).Value();
-					authUser.Username = ((json::String)(configDocument["User"]["UsernameNet"])).Value();
+					authUser.SessionID = ((json::String)(configDocument["User"]["SessionID"])).Value();
+					authUser.SessionKey = ((json::String)(configDocument["User"]["SessionKey"])).Value();
+					authUser.Username = ((json::String)(configDocument["User"]["NetUsername"])).Value();
 				} else {
 					authUser.ID = ((json::Number)(configDocument["User"]["ID"])).Value();
 					authUser.SessionID = ((json::String)(configDocument["User"]["SessionID"])).Value();
 					authUser.SessionKey = ((json::String)(configDocument["User"]["SessionKey"])).Value();
-					authUser.Username = ((json::String)(configDocument["User"]["Username"])).Value();
+					authUser.Username = ((json::String)(configDocument["User"]["OffUsername"])).Value();
 				}
+
+				passwordOff = ((json::String)(configDocument["User"]["OffPassword"])).Value();
+				passwordNet = ((json::String)(configDocument["User"]["NetPassword"])).Value();
 
 				std::string userElevation = ((json::String)(configDocument["User"]["Elevation"])).Value();
 				if(userElevation == "Admin")
@@ -859,6 +865,12 @@ void Client::WritePrefs()
 			configDocument["User"]["SessionKey"] = json::String(authUser.SessionKey);
 			configDocument["User"]["Username"] = json::String(authUser.Username);
 
+			printf("%s, %s, %s, %s\n", passwordOff.c_str(), passwordNet.c_str(), authUser.UsernameOff.c_str(), authUser.UsernameNet.c_str());
+			configDocument["User"]["OffPassword"] = json::String(passwordOff.c_str());
+			configDocument["User"]["NetPassword"] = json::String(passwordNet.c_str());
+			configDocument["User"]["OffUsername"] = json::String(authUser.UsernameOff.c_str());
+			configDocument["User"]["NetUsername"] = json::String(authUser.UsernameNet.c_str());
+
 			configDocument["User"]["IDNet"] = json::Number(authUser.IDNet);
 			configDocument["User"]["SessionIDNet"] = json::String(authUser.SessionIDNet);
 			configDocument["User"]["SessionKeyNet"] = json::String(authUser.SessionKeyNet);
@@ -1510,6 +1522,7 @@ LoginStatus Client::Login(std::string username, std::string password, User & use
 					user.UserElevation = User::ElevationModerator;
 				else
 					user.UserElevation= User::ElevationNone;
+				WritePrefs();
 				return LoginOkay;
 			}
 			else

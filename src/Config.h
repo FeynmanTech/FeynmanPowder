@@ -23,8 +23,8 @@
 
 #ifndef MOD_SAVE_VERSION
 #define MOD_SAVE_VERSION 8
-#define MOD_SAVE_VERSION_STRING "8.1"
-#define MOD_MINOR_VERSION 1
+#define MOD_SAVE_VERSION_STRING "8.3"
+#define MOD_MINOR_VERSION 3
 #endif
 
 #ifndef MINOR_VERSION
@@ -87,7 +87,7 @@
 #define SERVER "thepowdertoy.net"
 #define OLDSTATICSERVER "static.powdertoy.co.uk"
 #define STATICSERVER "static.thepowdertoy.net"
-#define PREF_FILE "powder.pref"
+#define PREF_FILE "./powder.pref"
 
 #define SCRIPTSERVER "powdertoy.co.uk"
 #define UPDATESERVER "files.brilliant-minds.tk/~feynman"

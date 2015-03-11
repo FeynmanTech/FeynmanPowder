@@ -43,7 +43,10 @@ scons: Configure: The original builder output was:
   |  |
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_2.o -c -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_2.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_2 .sconf_temp/conftest_2.o "-lm" -framework SDL""
+scons: Configure: ".sconf_temp/conftest_2" is up to date.
+scons: Configure: The original builder output was:
+  |i686-apple-darwin10-gcc -o .sconf_temp/conftest_2 .sconf_temp/conftest_2.o "-lm" -framework SDL""
+  |
 scons: Configure: yes
 
 scons: Configure: Checking for C header file SDL.h... 
