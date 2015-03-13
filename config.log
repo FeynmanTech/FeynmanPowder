@@ -106,7 +106,10 @@ scons: Configure: The original builder output was:
   |  |
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_5.o -c -DSDL_INC -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_5.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_5 -framework SDL .sconf_temp/conftest_5.o -llua5.1
+scons: Configure: ".sconf_temp/conftest_5" is up to date.
+scons: Configure: The original builder output was:
+  |i686-apple-darwin10-gcc -o .sconf_temp/conftest_5 -framework SDL .sconf_temp/conftest_5.o -llua5.1
+  |
 scons: Configure: yes
 
 scons: Configure: Checking for C header file lua.h... 
@@ -133,7 +136,10 @@ scons: Configure: The original builder output was:
   |  |
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_7.o -c -DSDL_INC -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_7.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_7 -framework SDL .sconf_temp/conftest_7.o -llua5.1 -lfftw3f
+scons: Configure: ".sconf_temp/conftest_7" is up to date.
+scons: Configure: The original builder output was:
+  |i686-apple-darwin10-gcc -o .sconf_temp/conftest_7 -framework SDL .sconf_temp/conftest_7.o -llua5.1 -lfftw3f
+  |
 scons: Configure: yes
 
 scons: Configure: Checking for C library bz2... 
@@ -178,7 +184,10 @@ scons: Configure: The original builder output was:
   |  |
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_10.o -c -DSDL_INC -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_10.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_10 -framework SDL .sconf_temp/conftest_10.o -llua5.1 -lfftw3f -lbz2 -lz
+scons: Configure: ".sconf_temp/conftest_10" is up to date.
+scons: Configure: The original builder output was:
+  |i686-apple-darwin10-gcc -o .sconf_temp/conftest_10 -framework SDL .sconf_temp/conftest_10.o -llua5.1 -lfftw3f -lbz2 -lz
+  |
 scons: Configure: yes
 
 scons: Configure: Checking for C library pthread... 

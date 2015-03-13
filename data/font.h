@@ -297,5 +297,4 @@ short font_ptrs[] = {
 #endif
 extern char font_data[];
 extern short font_ptrs[];
-extern int CurrentCharacter;
 #endif

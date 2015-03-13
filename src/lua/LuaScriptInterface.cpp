@@ -56,6 +56,7 @@ extern "C"
 #include "Lua Scripts/scriptmanager.h"
 #include "Lua Scripts/multiplayer.h"
 #include "Lua Scripts/sandboxing.h"
+#include "Lua Scripts/texter.h"
 //#include "Lua Scripts/multimod.h"
 
 GameModel * luacon_model;
@@ -368,18 +369,22 @@ void LuaScriptInterface::Init()
 	else
 		luacon_ci->Log(CommandInterface::LogNotice, "Loaded multiplayer");
 	if(luaL_loadstring(l, sandboxing_luac) || lua_pcall(l, 0, 0, 0))
-							luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
-						else
-							luacon_ci->Log(CommandInterface::LogNotice, "Loaded sandboxing_luac");
+		luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
+	else
+		luacon_ci->Log(CommandInterface::LogNotice, "Loaded sandboxing_luac");
+	if(luaL_loadstring(l, texter_luac) || lua_pcall(l, 0, 0, 0))
+		luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
+	else
+		luacon_ci->Log(CommandInterface::LogNotice, "Loaded texter");
 	/**
 	if(luaL_loadstring(l, multiplayermod_luac) || lua_pcall(l, 0, 0, 0)) //Runs but does not work
 		luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
 	else
 		luacon_ci->Log(CommandInterface::LogNotice, "Loaded multiplayer mod");
 	**/
-	if(Client::Ref().FileExists("autorun.lua"))
+	if(Client::Ref().FileExists("./autorun.lua"))
 	{
-		if(luaL_loadfile(l, "autorun.lua") || lua_pcall(l, 0, 0, 0))
+		if(luaL_loadfile(l, "./autorun.lua") || lua_pcall(l, 0, 0, 0))
 			luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
 		else
 			luacon_ci->Log(CommandInterface::LogNotice, "Loaded autorun.lua");

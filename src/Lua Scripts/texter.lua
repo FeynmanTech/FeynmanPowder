@@ -1,27 +1,27 @@
-function gdText(text, r, g, b)
+function __GDTEXT(text, r, g, b)
 	local r, g, b = r, g, b
-	function drawFontRect()
+	function __drawFontRect()
 		local x, y = sim.adjustCoords(tpt.mousex, tpt.mousey)
 		tpt.drawtext(x, y, text, r, g, b)
 	end
-	tpt.register_step(drawFontRect)
-	function stopFontRect(x, y, _b, e)
+	tpt.register_step(__drawFontRect)
+	function __stopFontRect(x, y, _b, e)
 		if e == 2 then
 			local x, y = sim.adjustCoords(tpt.mousex, tpt.mousey)
 			sim.plottext(x, y, text, r, g, b)
-			tpt.unregister_step(drawFontRect)
-			tpt.unregister_mouseclick(stopFontRect)
+			tpt.unregister_step(__drawFontRect)
+			tpt.unregister_mouseclick(__stopFontRect)
 		end
 		return false
 	end
-	tpt.register_mouseclick(stopFontRect)
+	tpt.register_mouseclick(__stopFontRect)
 end
 
 local toPlot, toPlot2, r, g, b = 'Hello world!', '', 255, 255, 255
 
 local winW, winH = 525, 170
 
-gdtexter_key_test = function(a, _b, c, d)
+__gdtexter_key_test = function(a, _b, c, d)
 	if a == 't' and c == 64 then
 		local cmx, cmy = tpt.mousex, tpt.mousey
 		local texterWindow = Window:new(305 - winW/2, 190 - winH/2, winW, winH)
@@ -89,7 +89,7 @@ gdtexter_key_test = function(a, _b, c, d)
 
 		closeButton:action(function()
 			interface.closeWindow(texterWindow)
-			gdText(string.gsub(toPlot, '\\n', '\n'), r, g, b)
+			__GDTEXT(string.gsub(toPlot, '\\n', '\n'), r, g, b)
 		end
 		)
 
@@ -111,5 +111,5 @@ gdtexter_key_test = function(a, _b, c, d)
 	end
 end
 
-tpt.register_keypress(gdtexter_key_test)
+tpt.register_keypress(__gdtexter_key_test)
 
