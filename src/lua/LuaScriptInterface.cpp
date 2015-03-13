@@ -360,12 +360,19 @@ tpt.partsdata = nil");
 void LuaScriptInterface::Init()
 {
 	lua_State *l = luacon_ci->l;
+	if(Client::Ref().FileExists("./autorun.lua"))
+	{
+		if(luaL_loadfile(l, "./autorun.lua") || lua_pcall(l, 0, 0, 0))
+			luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
+		else
+			luacon_ci->Log(CommandInterface::LogNotice, "Loaded autorun.lua");
+	}
 	if(luaL_loadstring(l, scriptmanager_luac) || lua_pcall(l, 0, 0, 0))
 		luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
 	else
 		luacon_ci->Log(CommandInterface::LogNotice, "Loaded script manager");
 	if(luaL_loadstring(l, multiplayer_luac) || lua_pcall(l, 0, 0, 0))
-		luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
+		luacon_ci->Log(CommandInterface::LogError, "Multiplayer was unable to load - there is probably another instance running.");
 	else
 		luacon_ci->Log(CommandInterface::LogNotice, "Loaded multiplayer");
 	if(luaL_loadstring(l, sandboxing_luac) || lua_pcall(l, 0, 0, 0))
@@ -382,13 +389,6 @@ void LuaScriptInterface::Init()
 	else
 		luacon_ci->Log(CommandInterface::LogNotice, "Loaded multiplayer mod");
 	**/
-	if(Client::Ref().FileExists("./autorun.lua"))
-	{
-		if(luaL_loadfile(l, "./autorun.lua") || lua_pcall(l, 0, 0, 0))
-			luacon_ci->Log(CommandInterface::LogError, luacon_geterror());
-		else
-			luacon_ci->Log(CommandInterface::LogNotice, "Loaded autorun.lua");
-	}
 }
 
 void LuaScriptInterface::SetWindow(ui::Window * window)
