@@ -17,6 +17,7 @@ VideoBuffer::VideoBuffer(int width, int height):
 {
 	Buffer = new pixel[width*height];
 	std::fill(Buffer, Buffer+(width*height), 0);
+	CurrentCharacter = 0;
 };
 
 VideoBuffer::VideoBuffer(const VideoBuffer & old):
@@ -25,6 +26,7 @@ VideoBuffer::VideoBuffer(const VideoBuffer & old):
 {
 	Buffer = new pixel[old.Width*old.Height];
 	std::copy(old.Buffer, old.Buffer+(old.Width*old.Height), Buffer);
+	CurrentCharacter = 0;
 };
 
 VideoBuffer::VideoBuffer(VideoBuffer * old):
@@ -33,6 +35,7 @@ VideoBuffer::VideoBuffer(VideoBuffer * old):
 {
 	Buffer = new pixel[old->Width*old->Height];
 	std::copy(old->Buffer, old->Buffer+(old->Width*old->Height), Buffer);
+	CurrentCharacter = 0;
 };
 
 VideoBuffer::VideoBuffer(pixel * buffer, int width, int height):
@@ -41,6 +44,7 @@ VideoBuffer::VideoBuffer(pixel * buffer, int width, int height):
 {
 	Buffer = new pixel[width*height];
 	std::copy(buffer, buffer+(width*height), Buffer);
+	CurrentCharacter = 0;
 }
 
 void VideoBuffer::Resize(float factor, bool resample)

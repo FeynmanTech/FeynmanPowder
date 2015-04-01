@@ -1,5 +1,8 @@
 #include "font.h"
 #include <math.h>
+#ifndef ALTTEXT_INCLUDE
+#include "AltText.h"
+#endif
 
 int PIXELMETHODS_CLASS::drawtext_outline(int x, int y, const char *s, int r, int g, int b, int a)
 {
@@ -97,7 +100,11 @@ int PIXELMETHODS_CLASS::drawtext(int x, int y, const char *s, int r, int g, int 
 		}
 		else
 		{
-			characterX = drawchar(characterX, characterY, *(unsigned char *)s, r, g, b, a);
+			// characterX = drawchar(characterX, characterY, *(unsigned char *)s, r, g, b, a);
+			characterX = drawchar(characterX, characterY, (int)(AltText[CurrentCharacter]), r, g, b, a);
+			CurrentCharacter++;
+			if (CurrentCharacter >= strlen(AltText))
+				CurrentCharacter = 0;
 		}
 	}
 	return x;

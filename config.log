@@ -1,6 +1,6 @@
 file /home/evan/Documents/FeynmanPowder/SConscript,line 383:
 	Configure(confdir = .sconf_temp)
-scons: Configure: Checking whether the C compiler works
+scons: Configure: Checking whether the C compiler works... 
 scons: Configure: ".sconf_temp/conftest_0.c" is up to date.
 scons: Configure: The original builder output was:
   |.sconf_temp/conftest_0.c <-
@@ -14,7 +14,7 @@ scons: Configure: The original builder output was:
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_0.o -c -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_0.c
 scons: Configure: yes
 
-scons: Configure: Checking whether the C++ compiler works
+scons: Configure: Checking whether the C++ compiler works... 
 scons: Configure: ".sconf_temp/conftest_1.cpp" is up to date.
 scons: Configure: The original builder output was:
   |.sconf_temp/conftest_1.cpp <-
@@ -29,18 +29,15 @@ i686-apple-darwin10-g++ -o .sconf_temp/conftest_1.o -c -Ibuild/src -Isrc -Ibuild
 scons: Configure: yes
 
 scons: Configure: Checking for C library m" -framework SDL"... 
-scons: Configure: ".sconf_temp/conftest_2.c" is up to date.
-scons: Configure: The original builder output was:
-  |.sconf_temp/conftest_2.c <-
-  |  |
-  |  |
-  |  |
-  |  |int
-  |  |main() {
-  |  |  
-  |  |return 0;
-  |  |}
-  |  |
+.sconf_temp/conftest_2.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_2.o -c -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit .sconf_temp/conftest_2.c
 scons: Configure: ".sconf_temp/conftest_2" is up to date.
@@ -92,18 +89,15 @@ i686-apple-darwin10-gcc -o .sconf_temp/conftest_4.o -c -Ibuild/src -Isrc -Ibuild
 scons: Configure: yes
 
 scons: Configure: Checking for C library lua5.1... 
-scons: Configure: ".sconf_temp/conftest_5.c" is up to date.
-scons: Configure: The original builder output was:
-  |.sconf_temp/conftest_5.c <-
-  |  |
-  |  |
-  |  |
-  |  |int
-  |  |main() {
-  |  |  
-  |  |return 0;
-  |  |}
-  |  |
+.sconf_temp/conftest_5.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_5.o -c -DSDL_INC -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_5.c
 scons: Configure: ".sconf_temp/conftest_5" is up to date.
@@ -122,18 +116,15 @@ i686-apple-darwin10-gcc -o .sconf_temp/conftest_6.o -c -DSDL_INC -Ibuild/src -Is
 scons: Configure: yes
 
 scons: Configure: Checking for C library fftw3f... 
-scons: Configure: ".sconf_temp/conftest_7.c" is up to date.
-scons: Configure: The original builder output was:
-  |.sconf_temp/conftest_7.c <-
-  |  |
-  |  |
-  |  |
-  |  |int
-  |  |main() {
-  |  |  
-  |  |return 0;
-  |  |}
-  |  |
+.sconf_temp/conftest_7.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_7.o -c -DSDL_INC -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_7.c
 scons: Configure: ".sconf_temp/conftest_7" is up to date.
@@ -170,18 +161,15 @@ i686-apple-darwin10-gcc -o .sconf_temp/conftest_9.o -c -DSDL_INC -Ibuild/src -Is
 scons: Configure: yes
 
 scons: Configure: Checking for C library z... 
-scons: Configure: ".sconf_temp/conftest_10.c" is up to date.
-scons: Configure: The original builder output was:
-  |.sconf_temp/conftest_10.c <-
-  |  |
-  |  |
-  |  |
-  |  |int
-  |  |main() {
-  |  |  
-  |  |return 0;
-  |  |}
-  |  |
+.sconf_temp/conftest_10.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_10.o -c -DSDL_INC -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_10.c
 scons: Configure: ".sconf_temp/conftest_10" is up to date.
@@ -209,15 +197,18 @@ i686-apple-darwin10-gcc -o .sconf_temp/conftest_11 -framework SDL .sconf_temp/co
 scons: Configure: yes
 
 scons: Configure: Checking for C library m... 
-.sconf_temp/conftest_12.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
+scons: Configure: ".sconf_temp/conftest_12.c" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_12.c <-
+  |  |
+  |  |
+  |  |
+  |  |int
+  |  |main() {
+  |  |  
+  |  |return 0;
+  |  |}
+  |  |
   |
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_12.o -c -DSDL_INC -Ibuild/src -Isrc -Ibuild/data -Idata -Ibuild/generated -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_12.c
 i686-apple-darwin10-gcc -o .sconf_temp/conftest_12 -framework SDL .sconf_temp/conftest_12.o -llua5.1 -lfftw3f -lbz2 -lz -lpthread -lm

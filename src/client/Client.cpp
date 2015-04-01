@@ -2308,6 +2308,7 @@ std::vector<SaveInfo*> * Client::SearchSaves(int start, int count, std::string q
 	if(category.length())
 	{
 		urlStream << "&Category=" << URLEscape(category);
+		printf("Category: %s", category.c_str());
 	}
 	if(authUser.ID)
 	{
