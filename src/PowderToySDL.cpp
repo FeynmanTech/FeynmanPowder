@@ -51,8 +51,6 @@ extern "C" {
 
 #include "client/HTTP.h"
 
-#include "font.h"
-
 using namespace std;
 
 #if defined(WIN) || defined(LIN)
@@ -577,14 +575,12 @@ void EventProcess(SDL_Event event)
 
 void EngineProcess()
 {
-	OpenURI("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 	int frameStart = SDL_GetTicks();
 	float frameTime;
 	float frameTimeAvg = 0.0f, correctedFrameTimeAvg = 0.0f;
 	SDL_Event event;
 	while(engine->Running())
 	{
-		CurrentCharacter = 0;
 		if(engine->Broken()) { engine->UnBreak(); break; }
 		event.type = 0;
 		while (SDL_PollEvent(&event))

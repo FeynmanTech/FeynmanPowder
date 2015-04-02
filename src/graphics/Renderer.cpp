@@ -9,7 +9,6 @@
 #include "simulation/Elements.h"
 #include "simulation/ElementGraphics.h"
 #include "simulation/Air.h"
-#include "font.h"
 #ifdef LUACONSOLE
 #include "lua/LuaScriptInterface.h"
 #include "lua/LuaScriptHelper.h"
@@ -33,7 +32,6 @@ extern "C"
 
 void Renderer::RenderBegin()
 {
-	// CurrentCharacter = 0;
 #ifdef OGLI
 #ifdef OGLR
 	draw_air();
