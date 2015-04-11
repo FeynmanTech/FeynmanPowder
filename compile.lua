@@ -35,5 +35,5 @@ else
 			print("Parameter: " .. v)
 		end
 	end
-	os.execute('scons -j4 --static --output=FeynmanPowder' .. (b32 and '_x86' or '') .. (mac and '_mac' or '') .. (win and '.exe' or '') .. ' --builddir="./build/" ' .. (release and ' --release' or '') .. (win and ' --win' or '') .. (mac and ' --mac' or '') .. (tptnet and ' --tptnet' or '') .. (b32 and ' --32bit' or (b64 and ' --64bit' or '')) .. ' ' .. table.concat(flags, ' ') .. ' ' .. params)
+	os.execute('scons -j4 --static --output=build/FeynmanPowder' .. (b32 and '_x86' or '') .. (mac and '_mac' or '') .. (win and '.exe' or '') .. --[[' --builddir="./build/" ' ..]] (release and ' --release' or '') .. (win and ' --win' or '') .. (mac and ' --mac' or '') .. (tptnet and ' --tptnet' or '') .. (b32 and ' --32bit' or (b64 and ' --64bit' or '')) .. ' ' .. table.concat(flags, ' ') .. ' ' .. params)
 end

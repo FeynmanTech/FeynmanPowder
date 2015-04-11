@@ -34,6 +34,41 @@ std::string sign::getText(Simulation *sim)
 			else
 				sprintf(buff, "Temp: 0.00");  //...temperature
 		}
+		else if (!strcmp(signText,"{life}"))
+		{
+			if (x>=0 && x<XRES && y>=0 && y<YRES && sim->pmap[y][x])
+				sprintf(buff, "Life: %d", sim->parts[sim->pmap[y][x]>>8].life);  //...life
+			else
+				sprintf(buff, "Life: 0");  //...life
+		}
+		else if (!strcmp(signText,"{tmp}"))
+		{
+			if (x>=0 && x<XRES && y>=0 && y<YRES && sim->pmap[y][x])
+				sprintf(buff, "Tmp: %d", sim->parts[sim->pmap[y][x]>>8].tmp);  //...tmp
+			else
+				sprintf(buff, "Tmp: 0");  //...tmp
+		}
+		else if (!strcmp(signText,"{tmp2}"))
+		{
+			if (x>=0 && x<XRES && y>=0 && y<YRES && sim->pmap[y][x])
+				sprintf(buff, "Tmp2: %d", sim->parts[sim->pmap[y][x]>>8].tmp2);  //...tmp2
+			else
+				sprintf(buff, "Tmp2: 0");  //...tmp2
+		}
+		else if (!strcmp(signText,"{type}"))
+		{
+			if (x>=0 && x<XRES && y>=0 && y<YRES && sim->pmap[y][x])
+				sprintf(buff, "Type: %d", sim->parts[sim->pmap[y][x]>>8].type);  //...type
+			else
+				sprintf(buff, "Type: 0");  //...type
+		}
+		else if (!strcmp(signText,"{ctype}"))
+		{
+			if (x>=0 && x<XRES && y>=0 && y<YRES && sim->pmap[y][x])
+				sprintf(buff, "Ctype: 0x%x", sim->parts[sim->pmap[y][x]>>8].ctype);  //...ctype
+			else
+				sprintf(buff, "Ctype: 0x0");  //...ctype
+		}
 		else
 		{
 			int pos=splitsign(signText);

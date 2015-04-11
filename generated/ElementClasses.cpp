@@ -190,5 +190,6 @@ std::vector<Element> GetElements()
 	elements.push_back(Element_REP());
 	elements.push_back(Element_REPG());
 	elements.push_back(Element_HEAT());
+	elements.push_back(Element_UBEX());
 	return elements;
 }

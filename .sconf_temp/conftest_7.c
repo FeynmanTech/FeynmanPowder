@@ -1,8 +1,3 @@
 
+#include "luajit.h"
 
-
-int
-main() {
-  
-return 0;
-}

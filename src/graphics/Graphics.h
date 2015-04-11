@@ -222,6 +222,8 @@ public:
 	int getb(int x, int y);
 	void blendpixel(int x, int y, int r, int g, int b, int a);
 	void addpixel(int x, int y, int r, int g, int b, int a);
+	void pixel_antialiased(float cx, float cy, int r, int g, int b, int ca);
+	void draw_line_antialiased(int x1, int y1, int x2, int y2, int r, int g, int b, int a);
 
 	void draw_icon(int x, int y, Icon icon, unsigned char alpha = 255, bool invert = false);
 

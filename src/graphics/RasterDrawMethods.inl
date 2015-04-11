@@ -332,6 +332,39 @@ void PIXELMETHODS_CLASS::addpixel(int x, int y, int r, int g, int b, int a)
 	vid[y*(VIDXRES)+x] = PIXRGB(r,g,b);
 }
 
+void PIXELMETHODS_CLASS::pixel_antialiased(float cx, float cy, int r, int g, int b, int ca)
+{
+	for (int x = floor(cx); x <= ceil(cx); x++)
+	{
+		for (int y = floor(cy); y <= ceil(cy); y++)
+		{
+			pixel t;
+			if (x<0 || y<0 || x>=VIDXRES || y>=VIDYRES)
+				return;
+			// int a = ca * (abs((double)(1 - (cx - (double)x))) * abs((double)((1 - (cy - (double)y)))));
+			/*
+			int a = ca * (1.0 - abs(cx - (float)x) + 1.0 - abs(cy - (float)y)) / 2.0;
+			t = vid[y*(VIDXRES)+x];
+			r = (a*r + 255*PIXR(t)) >> 8;
+			g = (a*g + 255*PIXG(t)) >> 8;
+			b = (a*b + 255*PIXB(t)) >> 8;
+			if (r>255)
+				r = 255;
+			if (g>255)
+				g = 255;
+			if (b>255)
+				b = 255;
+			*/
+            float colx = 1.0 - abs ( (float)x - cx );
+            float coly = 1.0 - abs ( (float)y - cy );
+            int colr = colx * coly * r;
+            int colg = colx * coly * g;
+            int colb = colx * coly * b;
+			vid[y*(VIDXRES)+x] = PIXRGB(colr,colg,colb);
+		}
+	}
+}
+
 void PIXELMETHODS_CLASS::xor_line(int x1, int y1, int x2, int y2)
 {
 	int cp=abs(y2-y1)>abs(x2-x1), x, y, dx, dy, sy;
@@ -466,6 +499,27 @@ void PIXELMETHODS_CLASS::draw_line(int x1, int y1, int x2, int y2, int r, int g,
 			e -= 1.0f;
 		}
 	}
+}
+
+void PIXELMETHODS_CLASS::draw_line_antialiased(int x1, int y1, int x2, int y2, int r, int g, int b, int a)
+{
+	if (( x1 > x2 or y1 > y2 ) && !( x1 > x2 and y1 > y2 ))
+	{
+		int tx = x1;
+		x1 = x2;
+		x2 = tx;
+
+		int ty = y1;
+		y1 = y2;
+		y2 = ty;
+    }
+    float d = sqrt ( pow((float)( x2 - x1 ), 2) + pow((float)( y2 - y1 ), 2) );
+    for (float k = 0.; k < d; k++)
+    {
+        float x = (float)x1 + k * ( float( x2 - x1 ) / d );
+        float y = (float)y1 + k * ( float( y2 - y1 ) / d );
+        pixel_antialiased ( x , y , r , g , b , a );
+    }
 }
 
 void PIXELMETHODS_CLASS::drawrect(int x, int y, int w, int h, int r, int g, int b, int a)

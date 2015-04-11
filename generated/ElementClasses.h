@@ -195,6 +195,7 @@
 #define PT_REP 184
 #define PT_REPG 185
 #define PT_HEAT 186
+#define PT_UBEX 188
 
 class Element_NONE: public Element
 {
@@ -1777,6 +1778,14 @@ class Element_HEAT: public Element
 public:
 	Element_HEAT();
 	virtual ~Element_HEAT();
+	static int update(UPDATE_FUNC_ARGS);
+};
+
+class Element_UBEX: public Element
+{
+public:
+	Element_UBEX();
+	virtual ~Element_UBEX();
 	static int update(UPDATE_FUNC_ARGS);
 };
 
