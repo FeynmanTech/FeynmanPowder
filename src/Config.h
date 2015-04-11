@@ -22,9 +22,9 @@
 #endif
 
 #ifndef MOD_SAVE_VERSION
-#define MOD_SAVE_VERSION 8
-#define MOD_SAVE_VERSION_STRING "8.9"
-#define MOD_MINOR_VERSION 9
+#define MOD_SAVE_VERSION 9
+#define MOD_SAVE_VERSION_STRING "9.0"
+#define MOD_MINOR_VERSION 0
 #endif
 
 #ifndef MINOR_VERSION

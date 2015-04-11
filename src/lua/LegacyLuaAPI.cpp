@@ -1489,7 +1489,7 @@ int luatpt_drawline(lua_State* l)
 	else if (b>255) b = 255;
 	if (a<0) a = 0;
 	else if (a>255) a = 255;
-	luacon_g->draw_line_antialiased(x1, y1, x2, y2, r, g, b, a);
+	luacon_g->draw_line(x1, y1, x2, y2, r, g, b, a);
 	return 0;
 }
 
