@@ -18,6 +18,8 @@
 #include "RenderPreset.h"
 #include "Menu.h"
 
+#include "gui/options/UserOptionsView.h"
+
 using namespace std;
 
 class DebugInfo;
@@ -34,6 +36,7 @@ private:
 	int screenshotIndex;
 	sign * foundSign;
 
+	UserOptionsView * UOV;
 	PreviewController * activePreview;
 	GameView * gameView;
 	GameModel * gameModel;
@@ -122,6 +125,9 @@ public:
 	void OpenLocalSaveWindow(bool asCurrent);
 	void OpenLocalBrowse();
 	void OpenOptions();
+	int  AddOption(char * header, char * description);
+	int  GetOptionState(int index);
+	void OpenUserOptions();
 	void OpenRenderOptions();
 	void OpenSaveWindow();
 	void SaveAsCurrent();

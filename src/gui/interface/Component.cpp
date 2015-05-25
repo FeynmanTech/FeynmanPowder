@@ -20,7 +20,8 @@ Component::Component(Window* parent_state):
 	textSize(0, 0),
 	iconPosition(0, 0),
 	drawn(false),
-	menu(NULL)
+	menu(NULL),
+	InitializedWithArgs(true)
 {
 
 }
@@ -36,7 +37,8 @@ Component::Component(Point position, Point size):
 	textSize(0, 0),
 	iconPosition(0, 0),
 	drawn(false),
-	menu(NULL)
+	menu(NULL),
+	InitializedWithArgs(true)
 {
 
 }
@@ -52,7 +54,8 @@ Component::Component():
 	textSize(0, 0),
 	iconPosition(0, 0),
 	drawn(false),
-	menu(NULL)
+	menu(NULL),
+	InitializedWithArgs(false)
 {
 
 }

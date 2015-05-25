@@ -1730,6 +1730,31 @@ int luatpt_message_box(lua_State* l)
 	return 0;
 }
 
+int luatpt_option(lua_State* l)
+{
+	std::string title = std::string(luaL_optstring(l, 1, "Name"));
+	std::string message = std::string(luaL_optstring(l, 2, "Can be toggled"));
+	int rpos = luacon_controller->AddOption((char*)title.c_str(), (char*)message.c_str());
+	lua_getglobal(l, "tpt");
+	lua_getfield(l, lua_gettop(l), "USER_OPTIONS");
+	int uo_index = lua_gettop(l);
+	if (lua_isfunction(l, 3))
+	{
+		lua_pushvalue(l, 3);
+		lua_rawseti(l, uo_index, rpos);
+	}
+	lua_pushinteger(l, rpos);
+	return 1;
+}
+
+int luatpt_getOption(lua_State* l)
+{
+	int index = luaL_optint(l, 1, 0);
+	int val = luacon_controller->GetOptionState(index);
+	lua_pushboolean(l, val);
+	return 1;
+}
+
 int luatpt_get_numOfParts(lua_State* l)
 {
 	lua_pushinteger(l, luacon_sim->NUM_PARTS);

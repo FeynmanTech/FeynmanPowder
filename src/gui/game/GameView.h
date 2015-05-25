@@ -89,6 +89,7 @@ private:
 	ui::Button * tagSimulationButton;
 	ui::Button * clearSimButton;
 	ui::Button * loginButton;
+	ui::Button * userOptionsButton;
 	ui::Button * simulationOptionButton;
 	ui::Button * displayModeButton;
 	ui::Button * pauseButton;

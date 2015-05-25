@@ -98,7 +98,8 @@ enum Icon
 	IconPersistant,
 	IconHeat,
 	IconLife,
-	IconGradient
+	IconGradient,
+	IconUserOptions
 };
 
 //"Graphics lite" - slightly lower performance due to variable size,

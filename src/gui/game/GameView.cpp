@@ -331,9 +331,9 @@ GameView::GameView():
 		}
 	};
 	if (Client::Ref().GetServer() == 0) {
-		tagSimulationButton = new ui::Button(ui::Point(currentX, Size.Y-16), ui::Point(227, 15), "[no tags set]", "Add simulation tags");
+		tagSimulationButton = new ui::Button(ui::Point(currentX, Size.Y-16), ui::Point(227-16, 15), "[no tags set]", "Add simulation tags");
 	} else {
-		tagSimulationButton = new ui::Button(ui::Point(currentX, Size.Y-16), ui::Point(241, 15), "[no tags set]", "Add simulation tags");
+		tagSimulationButton = new ui::Button(ui::Point(currentX, Size.Y-16), ui::Point(241-16, 15), "[no tags set]", "Add simulation tags");
 	}
 	tagSimulationButton->Appearance.HorizontalAlign = ui::Appearance::AlignLeft;
 	tagSimulationButton->SetIcon(IconTag);
@@ -351,7 +351,7 @@ GameView::GameView():
 			v->c->ClearSim();
 		}
 	};
-	clearSimButton = new ui::Button(ui::Point(Size.X-159, Size.Y-16), ui::Point(17, 15), "", "Erase everything");
+	clearSimButton = new ui::Button(ui::Point(Size.X-159-16, Size.Y-16), ui::Point(17, 15), "", "Erase everything");
 	clearSimButton->SetIcon(IconNew);
 	clearSimButton->Appearance.Margin.Left+=2;
 	clearSimButton->SetActionCallback(new ClearSimAction(this));
@@ -371,11 +371,27 @@ GameView::GameView():
 			v->c->OpenProfile();
 		}
 	};
-	loginButton = new SplitButton(ui::Point(Size.X-141, Size.Y-16), ui::Point(92, 15), "[sign in]", "Sign into simulation server", "Edit Profile", 19);
+	loginButton = new SplitButton(ui::Point(Size.X-141-16, Size.Y-16), ui::Point(92, 15), "[sign in]", "Sign into simulation server", "Edit Profile", 19);
 	loginButton->Appearance.HorizontalAlign = ui::Appearance::AlignLeft;
 	loginButton->SetIcon(IconLogin);
 	((SplitButton*)loginButton)->SetSplitActionCallback(new LoginAction(this));
 	AddComponent(loginButton);
+
+	class UserOptionsAction : public ui::ButtonAction
+	{
+		GameView * v;
+	public:
+		UserOptionsAction(GameView * _v) { v = _v; }
+		void ActionCallback(ui::Button * sender)
+		{
+			v->c->OpenUserOptions();
+		}
+	};
+	userOptionsButton = new ui::Button(ui::Point(Size.X-48-16, Size.Y-16), ui::Point(15, 15), "", "User options");
+	userOptionsButton->SetIcon(IconUserOptions);
+	userOptionsButton->Appearance.Margin.Left+=2;
+	userOptionsButton->SetActionCallback(new UserOptionsAction(this));
+	AddComponent(userOptionsButton);
 
 	class SimulationOptionAction : public ui::ButtonAction
 	{

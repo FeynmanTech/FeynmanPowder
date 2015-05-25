@@ -212,6 +212,8 @@ LuaScriptInterface::LuaScriptInterface(GameController * c, GameModel * m):
 		{"graphics_func",&luatpt_graphics_func},
 		{"get_clipboard", &luatpt_getclip},
 		{"set_clipboard", &luatpt_setclip},
+		{"option", &luatpt_option},
+		{"getOption", &luatpt_getOption},
 		{NULL,NULL}
 	};
 
@@ -236,6 +238,8 @@ LuaScriptInterface::LuaScriptInterface(GameController * c, GameModel * m):
 	lua_setfield(l, tptProperties, "mousex");
 	lua_pushinteger(l, 0);
 	lua_setfield(l, tptProperties, "mousey");
+	lua_newtable(l);
+	lua_setfield(l, tptProperties, "USER_OPTIONS");
 
 	lua_newtable(l);
 	tptPropertiesVersion = lua_gettop(l);

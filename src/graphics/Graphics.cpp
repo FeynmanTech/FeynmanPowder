@@ -1110,6 +1110,9 @@ void Graphics::draw_icon(int x, int y, Icon icon, unsigned char alpha, bool inve
 			drawchar(x+1, y+1, 0xD5, 55, 255, 55, alpha);
 		}
 		break;
+	case IconUserOptions:
+		drawchar(x-1, y+1, 0xE9, 255, 255, 255, alpha);
+		break;
 	default:
 		if(invert)
 			drawchar(x, y, 't', 0, 0, 0, alpha);

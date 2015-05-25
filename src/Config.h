@@ -84,8 +84,8 @@
 #define MTOS(str) MTOS_EXPAND(str)
 
 #define OLDSERVER "powdertoy.co.uk"
-#define SERVER "thepowdertoy.net"
 #define OLDSTATICSERVER "static.powdertoy.co.uk"
+#define SERVER "thepowdertoy.net"
 #define STATICSERVER "static.thepowdertoy.net"
 #define PREF_FILE "./powder.pref"
 

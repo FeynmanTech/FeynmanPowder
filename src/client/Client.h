@@ -143,6 +143,7 @@ public:
 	std::vector<unsigned char> GetSaveData(int saveID, int saveDate);
 
 	LoginStatus Login(std::string username, std::string password, User & user);
+	LoginStatus Login(std::string username, char * password, bool isEncrypted, User & user);
 	void ClearThumbnailRequests();
 	std::vector<SaveInfo*> * SearchSaves(int start, int count, std::string query, std::string sort, std::string category, int & resultCount);
 	std::vector<std::pair<std::string, int> > * GetTags(int start, int count, std::string query, int & resultCount);

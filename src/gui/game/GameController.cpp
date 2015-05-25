@@ -46,6 +46,8 @@
 #include "lua/LuaSlider.h"
 #include "lua/LuaProgressBar.h"
 
+#include "gui/options/UserOptionsView.h"
+
 using namespace std;
 
 class GameController::SearchCallback: public ControllerCallback
@@ -143,6 +145,7 @@ GameController::GameController():
 		HasDone(false),
 		firstTick(true)
 {
+	UOV = new UserOptionsView();
 	gameView = new GameView();
 	gameModel = new GameModel();
 	gameModel->BuildQuickOptionMenu(this);
@@ -1259,7 +1262,21 @@ void GameController::OpenOptions()
 {
 	options = new OptionsController(gameModel, new OptionsCallback(this));
 	ui::Engine::Ref().ShowWindow(options->GetView());
+}
 
+int GameController::AddOption(char * header, char * description)
+{
+	return UOV->AddOption(header, description);
+}
+
+int GameController::GetOptionState(int index)
+{
+	return UOV->GetOptionState(index);
+}
+
+void GameController::OpenUserOptions()
+{
+	ui::Engine::Ref().ShowWindow(UOV);
 }
 
 void GameController::ShowConsole()

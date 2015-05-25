@@ -19,6 +19,7 @@ class Checkbox: public ui::Component {
 	bool isMouseOver;
 	CheckboxAction * actionCallback;
 public:
+	bool InitializedWithArgs;
 	Checkbox(ui::Point position, ui::Point size, std::string text, std::string toolTip);
 	void SetText(std::string text);
 	std::string GetText();

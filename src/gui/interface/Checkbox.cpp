@@ -8,7 +8,8 @@ Checkbox::Checkbox(ui::Point position, ui::Point size, std::string text, std::st
 	toolTip(toolTip),
 	isMouseOver(false),
 	checked(false),
-	actionCallback(NULL)
+	actionCallback(NULL),
+	InitializedWithArgs(true)
 {
 
 }

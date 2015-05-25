@@ -28,6 +28,7 @@ namespace ui
 		ui::Point iconPosition;
 		ui::ContextMenu * menu;
 	public:
+		bool InitializedWithArgs;
 		Component(Window* parent_state);
 		Component(Point position, Point size);
 		Component();

@@ -69,8 +69,8 @@ void writeUserPreferences(const char * prefData);
 
 int isNet = 0;
 
-std::string passwordNet = "none";
-std::string passwordOff = "none";
+char* passwordNet = "none";
+char* passwordOff = "none";
 
 std::string sessionKeyNet = "";
 std::string sessionKeyOff = "";
@@ -139,8 +139,8 @@ Client::Client():
 					authUser.Username = ((json::String)(configDocument["User"]["OffUsername"])).Value();
 				}
 
-				passwordOff = ((json::String)(configDocument["User"]["OffPassword"])).Value();
-				passwordNet = ((json::String)(configDocument["User"]["NetPassword"])).Value();
+				passwordOff = (char*)((json::String)(configDocument["User"]["OffPassword"])).Value().c_str();
+				passwordNet = (char*)((json::String)(configDocument["User"]["NetPassword"])).Value().c_str();
 
 				std::string userElevation = ((json::String)(configDocument["User"]["Elevation"])).Value();
 				if(userElevation == "Admin")
@@ -865,9 +865,9 @@ void Client::WritePrefs()
 			configDocument["User"]["SessionKey"] = json::String(authUser.SessionKey);
 			configDocument["User"]["Username"] = json::String(authUser.Username);
 
-			printf("%s, %s, %s, %s\n", passwordOff.c_str(), passwordNet.c_str(), authUser.UsernameOff.c_str(), authUser.UsernameNet.c_str());
-			configDocument["User"]["OffPassword"] = json::String(passwordOff.c_str());
-			configDocument["User"]["NetPassword"] = json::String(passwordNet.c_str());
+			printf("%s, %s, %s, %s\n", passwordOff, passwordNet, authUser.UsernameOff.c_str(), authUser.UsernameNet.c_str());
+			configDocument["User"]["OffPassword"] = json::String(passwordOff);
+			configDocument["User"]["NetPassword"] = json::String(passwordNet);
 			configDocument["User"]["OffUsername"] = json::String(authUser.UsernameOff.c_str());
 			configDocument["User"]["NetUsername"] = json::String(authUser.UsernameNet.c_str());
 
@@ -1249,13 +1249,13 @@ void Client::SetServer(int net)
 	LoginController lc;
 	if (net == 1)
 	{
-		printf("TPTNET\nUsername: %s\nPassword: %s\n", authUser.UsernameNet.c_str(), passwordNet.c_str());
-		lc.Login(authUser.UsernameNet, passwordNet);
+		printf("TPTNET\nUsername: %s\nPassword: %s\n", authUser.UsernameNet.c_str(), passwordNet);
+		Login((std::string)authUser.UsernameNet, passwordNet, true, authUser);
 	}
 	else
 	{
-		printf("OFFICIAL\nUsername: %s\nPassword: %s\n", authUser.UsernameOff.c_str(), passwordOff.c_str());
-		lc.Login(authUser.UsernameOff, passwordOff);
+		printf("OFFICIAL\nUsername: %s\nPassword: %s\n", authUser.UsernameOff.c_str(), passwordOff);
+		Login((std::string)authUser.UsernameOff, passwordOff, true, authUser);
 	}
 }
 
@@ -1416,7 +1416,15 @@ RequestBroker::Request * Client::GetUserInfoAsync(std::string username)
 	return new APIRequest("http://" + serverUsed + "/User.json?Name=" + username, new UserInfoParser());
 }
 
+// md5_ascii(passwordHash, (const unsigned char *)password.c_str(), password.length());
 LoginStatus Client::Login(std::string username, std::string password, User & user)
+{
+	char passwordHash[33];
+	md5_ascii(passwordHash, (const unsigned char *)password.c_str(), password.length());
+	return Login(username, passwordHash, true, user);
+}
+
+LoginStatus Client::Login(std::string username, char * password, bool isEncrypted, User & user)
 {
 
 	lastError = "";
@@ -1442,7 +1450,9 @@ LoginStatus Client::Login(std::string username, std::string password, User & use
 	//*/
 
 	//Doop
-	md5_ascii(passwordHash, (const unsigned char *)password.c_str(), password.length());
+	//md5_ascii(passwordHash, (const unsigned char *)password.c_str(), password.length());
+	sprintf(passwordHash, password);
+
 	passwordHash[32] = 0;
 	hashStream << username << "-" << passwordHash;
 	md5_ascii(totalHash, (const unsigned char *)(hashStream.str().c_str()), hashStream.str().length());
