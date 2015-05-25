@@ -1,30 +1,8 @@
 file /home/computer/Documents/FeynmanPowder/SConscript,line 383:
 	Configure(confdir = .sconf_temp)
-scons: Configure: Checking whether the C compiler works... 
+scons: Configure: Checking for C library SDLmain... 
 .sconf_temp/conftest_0.c <-
   |
-  |int main()
-  |{
-  |    return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_0.o -c -Isrc -Idata -Igenerated -I/usr/include/luajit .sconf_temp/conftest_0.c
-scons: Configure: yes
-
-scons: Configure: Checking whether the C++ compiler works... 
-.sconf_temp/conftest_1.cpp <-
-  |
-  |int main()
-  |{
-  |    return 0;
-  |}
-  |
-i686-apple-darwin10-g++ -o .sconf_temp/conftest_1.o -c -Isrc -Idata -Igenerated -I/usr/include/luajit .sconf_temp/conftest_1.cpp
-scons: Configure: yes
-
-scons: Configure: Checking for C library m" -framework SDL"... 
-.sconf_temp/conftest_2.c <-
-  |
   |
   |
   |int
@@ -33,209 +11,22 @@ scons: Configure: Checking for C library m" -framework SDL"...
   |return 0;
   |}
   |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_2.o -c -Isrc -Idata -Igenerated -I/usr/include/luajit .sconf_temp/conftest_2.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_2 .sconf_temp/conftest_2.o "-lm" -framework SDL""
-scons: Configure: yes
-
-scons: Configure: Checking for C header file SDL.h... 
-.sconf_temp/conftest_3.c <-
-  |
-  |#include "SDL.h"
-  |
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_3.o -c -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_3.c
-In file included from .sconf_temp/conftest_3.c:2:
-src/SDL.h:30:22: error: SDL_main.h: No such file or directory
-src/SDL.h:31:24: error: SDL_stdinc.h: No such file or directory
-src/SDL.h:32:23: error: SDL_audio.h: No such file or directory
-src/SDL.h:33:23: error: SDL_cdrom.h: No such file or directory
-src/SDL.h:34:25: error: SDL_cpuinfo.h: No such file or directory
-src/SDL.h:35:24: error: SDL_endian.h: No such file or directory
-src/SDL.h:36:23: error: SDL_error.h: No such file or directory
-src/SDL.h:37:24: error: SDL_events.h: No such file or directory
-src/SDL.h:38:24: error: SDL_loadso.h: No such file or directory
-src/SDL.h:39:23: error: SDL_mutex.h: No such file or directory
-src/SDL.h:40:23: error: SDL_rwops.h: No such file or directory
-src/SDL.h:41:24: error: SDL_thread.h: No such file or directory
-src/SDL.h:42:23: error: SDL_timer.h: No such file or directory
-src/SDL.h:43:23: error: SDL_video.h: No such file or directory
-src/SDL.h:44:25: error: SDL_version.h: No such file or directory
-src/SDL.h:46:24: error: begin_code.h: No such file or directory
-In file included from .sconf_temp/conftest_3.c:2:
-src/SDL.h:76: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'int'
-src/SDL.h:79: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'int'
-src/SDL.h:82: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'void'
-src/SDL.h:88: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'Uint32'
-src/SDL.h:93: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'void'
-src/SDL.h:99:24: error: close_code.h: No such file or directory
+i586-mingw32msvc-gcc -o .sconf_temp/conftest_0.o -c -m32 -Isrc -Idata -Igenerated -I/usr/include/luajit .sconf_temp/conftest_0.c
+/tmp/cczkzOyN.s: Assembler messages:
+/tmp/cczkzOyN.s:2: Error: unknown pseudo-op: `.def'
+/tmp/cczkzOyN.s:2: Error: unknown pseudo-op: `.scl'
+/tmp/cczkzOyN.s:2: Error: Missing symbol name in directive
+/tmp/cczkzOyN.s:2: Error: unrecognized symbol type "32"
+/tmp/cczkzOyN.s:2: Error: unknown pseudo-op: `.endef'
+/tmp/cczkzOyN.s:5: Error: unknown pseudo-op: `.def'
+/tmp/cczkzOyN.s:5: Error: unknown pseudo-op: `.scl'
+/tmp/cczkzOyN.s:5: Error: Missing symbol name in directive
+/tmp/cczkzOyN.s:5: Error: unrecognized symbol type "32"
+/tmp/cczkzOyN.s:5: Error: unknown pseudo-op: `.endef'
+/tmp/cczkzOyN.s:9: Error: invalid instruction suffix for `push'
+/tmp/cczkzOyN.s:10: Error: invalid instruction suffix for `push'
+/tmp/cczkzOyN.s:12: Error: invalid instruction suffix for `push'
+/tmp/cczkzOyN.s:17: Error: invalid instruction suffix for `pop'
+/tmp/cczkzOyN.s:18: Error: invalid instruction suffix for `pop'
 scons: Configure: no
-
-scons: Configure: Checking for C header file SDL/SDL.h... 
-.sconf_temp/conftest_4.c <-
-  |
-  |#include "SDL/SDL.h"
-  |
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_4.o -c -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_4.c
-scons: Configure: yes
-
-scons: Configure: Checking for C library lua5.1... 
-.sconf_temp/conftest_5.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_5.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_5.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_5 -framework SDL .sconf_temp/conftest_5.o -llua5.1
-scons: Configure: yes
-
-scons: Configure: Checking for C header file lua.h... 
-.sconf_temp/conftest_6.c <-
-  |
-  |#include "lua.h"
-  |
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_6.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_6.c
-scons: Configure: yes
-
-scons: Configure: Checking for C library fftw3f... 
-.sconf_temp/conftest_7.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_7.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_7.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_7 -framework SDL .sconf_temp/conftest_7.o -llua5.1 -lfftw3f
-ld: library not found for -lfftw3f
-collect2: ld returned 1 exit status
-scons: Configure: no
-
-scons: Configure: Checking for C library fftw3f-3... 
-.sconf_temp/conftest_8.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_8.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_8.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_8 -framework SDL .sconf_temp/conftest_8.o -llua5.1 -lfftw3f-3
-ld: library not found for -lfftw3f-3
-collect2: ld returned 1 exit status
-scons: Configure: no
-
-scons: Configure: Checking for C library libfftw3f-3... 
-.sconf_temp/conftest_9.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_9.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_9.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_9 -framework SDL .sconf_temp/conftest_9.o -llua5.1 -lfftw3f-3
-ld: library not found for -lfftw3f-3
-collect2: ld returned 1 exit status
-scons: Configure: no
-
-scons: Configure: Checking for C library bz2... 
-.sconf_temp/conftest_10.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_10.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_10.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_10 -framework SDL .sconf_temp/conftest_10.o -llua5.1 -lbz2
-scons: Configure: yes
-
-scons: Configure: Checking for C header file bzlib.h... 
-.sconf_temp/conftest_11.c <-
-  |
-  |#include "bzlib.h"
-  |
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_11.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_11.c
-scons: Configure: yes
-
-scons: Configure: Checking for C library z... 
-.sconf_temp/conftest_12.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_12.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_12.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_12 -framework SDL .sconf_temp/conftest_12.o -llua5.1 -lbz2 -lz
-scons: Configure: yes
-
-scons: Configure: Checking for C library pthread... 
-.sconf_temp/conftest_13.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_13.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_13.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_13 -framework SDL .sconf_temp/conftest_13.o -llua5.1 -lbz2 -lz -lpthread
-scons: Configure: yes
-
-scons: Configure: Checking for C library m... 
-.sconf_temp/conftest_14.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_14.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_14.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_14 -framework SDL .sconf_temp/conftest_14.o -llua5.1 -lbz2 -lz -lpthread -lm
-scons: Configure: yes
-
-scons: Configure: Checking for C library m" -framework Cocoa"... 
-.sconf_temp/conftest_15.c <-
-  |
-  |
-  |
-  |int
-  |main() {
-  |  
-  |return 0;
-  |}
-  |
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_15.o -c -DSDL_INC -Isrc -Idata -Igenerated -I/usr/include/luajit -I/Library/Frameworks/SDL.framework/Headers .sconf_temp/conftest_15.c
-i686-apple-darwin10-gcc -o .sconf_temp/conftest_15 -framework SDL .sconf_temp/conftest_15.o -llua5.1 -lbz2 -lz -lpthread -lm "-lm" -framework Cocoa""
-scons: Configure: yes
-
 

@@ -1,0 +1,277 @@
+timer.lo timer.o: timer.c ifftw.h ../config.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdlib.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/available.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/cdefs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/wait.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/signal.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/appleapiopts.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/signal.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/signal.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/resource.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/endian.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/endian.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_endian.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/_OSByteOrder.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/i386/_OSByteOrder.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/alloca.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdarg.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stddef.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdint.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/inttypes.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/time.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/time.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_select.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/unistd.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/unistd.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/select.h cycle.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/mach_time.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/mach_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/host_info.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/message.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/port.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/boolean.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/boolean.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/boolean.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/vm_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/vm_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/kern_return.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/kern_return.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/kern_return.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_statistics.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/time_value.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/host_notify.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/host_special_ports.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/memory_object_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_prot.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_sync.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/exception_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/exception.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/exception.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_status.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/thread_status.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/thread_status.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/fp_reg.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/thread_state.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/eflags.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/thread_state.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/processor_info.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/processor_info.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/processor_info.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/task_info.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/policy.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/task_policy.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/task_special_ports.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_info.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_policy.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_special_ports.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/clock_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_attributes.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_inherit.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_purgable.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_behavior.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_region.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/vm_param.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/vm_param.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/kmod.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/std_types.h
+
+ifftw.h:
+
+../config.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdlib.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/available.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/cdefs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/wait.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/signal.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/appleapiopts.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/signal.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/signal.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/resource.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/endian.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/endian.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_endian.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/_OSByteOrder.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/i386/_OSByteOrder.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/alloca.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdarg.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stddef.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdint.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/inttypes.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/time.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/time.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_select.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/unistd.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/unistd.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/select.h:
+
+cycle.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/mach_time.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/mach_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/host_info.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/message.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/port.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/boolean.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/boolean.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/boolean.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/vm_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/vm_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/kern_return.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/kern_return.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/kern_return.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_statistics.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/time_value.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/host_notify.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/host_special_ports.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/memory_object_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_prot.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_sync.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/exception_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/exception.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/exception.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_status.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/thread_status.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/thread_status.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/fp_reg.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/thread_state.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/eflags.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/thread_state.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/processor_info.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/processor_info.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/processor_info.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/task_info.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/policy.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/task_policy.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/task_special_ports.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_info.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_policy.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/thread_special_ports.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/clock_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_attributes.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_inherit.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_purgable.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_behavior.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/vm_region.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/machine/vm_param.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/vm_param.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/kmod.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/std_types.h:

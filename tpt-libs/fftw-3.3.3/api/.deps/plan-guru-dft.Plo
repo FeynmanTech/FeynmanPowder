@@ -1,0 +1,136 @@
+plan-guru-dft.lo plan-guru-dft.o: plan-guru-dft.c guru.h plan-guru-dft.h \
+  api.h fftw3.h /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdio.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/cdefs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stddef.h \
+  ../kernel/ifftw.h ../config.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdlib.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/available.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/wait.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/signal.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/appleapiopts.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/signal.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/signal.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/resource.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/endian.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/endian.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_endian.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/_OSByteOrder.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/i386/_OSByteOrder.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/alloca.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdarg.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdint.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/inttypes.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/time.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/time.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_structs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_select.h \
+  ../rdft/rdft.h ../kernel/ifftw.h ../rdft/codelet-rdft.h ../dft/dft.h \
+  ../kernel/ifftw.h ../dft/codelet-dft.h
+
+guru.h:
+
+plan-guru-dft.h:
+
+api.h:
+
+fftw3.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdio.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/cdefs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stddef.h:
+
+../kernel/ifftw.h:
+
+../config.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdlib.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/available.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/wait.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/signal.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/appleapiopts.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/signal.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/signal.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/mach/i386/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/resource.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/endian.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/endian.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_endian.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/_OSByteOrder.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/libkern/i386/_OSByteOrder.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/alloca.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdarg.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdint.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/inttypes.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/time.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/time.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_structs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_select.h:
+
+../rdft/rdft.h:
+
+../kernel/ifftw.h:
+
+../rdft/codelet-rdft.h:
+
+../dft/dft.h:
+
+../kernel/ifftw.h:
+
+../dft/codelet-dft.h:

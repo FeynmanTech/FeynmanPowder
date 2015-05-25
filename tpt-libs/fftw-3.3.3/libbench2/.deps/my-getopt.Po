@@ -1,0 +1,27 @@
+my-getopt.o my-getopt.o: my-getopt.c \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/string.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/cdefs.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h \
+  /usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdio.h ../config.h \
+  my-getopt.h
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/string.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/sys/cdefs.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/machine/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/i386/_types.h:
+
+/usr/lib/apple/SDKs/MacOSX10.5.sdk/usr/include/stdio.h:
+
+../config.h:
+
+my-getopt.h:
