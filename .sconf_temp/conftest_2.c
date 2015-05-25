@@ -1,7 +1,8 @@
-#include <stdlib.h>
-	#include <stdio.h>
-	int main() {
-	    printf("%d", (int)sizeof(size_t));
-	    return 0;
-	}
-	
+
+
+
+int
+main() {
+  
+return 0;
+}
