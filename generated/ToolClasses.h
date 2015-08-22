@@ -5,12 +5,12 @@
 
 #include "simulation/simtools/SimTool.h"
 
+#define TOOL_COOL 1
+#define TOOL_NGRV 5
+#define TOOL_HEAT 0
+#define TOOL_AIR 2
 #define TOOL_VAC 3
 #define TOOL_PGRV 4
-#define TOOL_AIR 2
-#define TOOL_NGRV 5
-#define TOOL_COOL 1
-#define TOOL_HEAT 0
 
 class Tool_Air: public SimTool
 {

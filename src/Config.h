@@ -23,8 +23,8 @@
 
 #ifndef MOD_SAVE_VERSION
 #define MOD_SAVE_VERSION 9
-#define MOD_SAVE_VERSION_STRING "9.4"
-#define MOD_MINOR_VERSION 4
+#define MOD_SAVE_VERSION_STRING "9.5"
+#define MOD_MINOR_VERSION 5
 #endif
 
 #ifndef MINOR_VERSION
@@ -90,7 +90,7 @@
 #define PREF_FILE "./powder.pref"
 
 #define SCRIPTSERVER "powdertoy.co.uk"
-#define UPDATESERVER "files.brilliant-minds.tk/~feynman"
+#define UPDATESERVER "files.brilliant-minds.tk/Stocks/mod"
 
 #define LOCAL_SAVE_DIR "Saves"
 

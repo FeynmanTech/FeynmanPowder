@@ -1,3 +1,3 @@
 
-#include "SDL/SDL.h"
+#include "lua.h"
 
