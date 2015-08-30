@@ -73,6 +73,8 @@ AddSconsOption('nolua', False, False, "Disable Lua.")
 AddSconsOption('nofft', False, False, "Disable FFT.")
 AddSconsOption("output", False, True, "Executable output name.")
 
+AddSconsOption("mod-save-version", False, True, "Defines the Mod save version in the format <major.minor>")
+AddSconsOption("mod-build-number", False, True, "Defines the mod build number")
 AddSconsOption("tptnet", False, False, "Compile for TPTNet (obsolete).")
 AddSconsOption("nojit", False, False, "Disable LuaJIT compiling.")
 
