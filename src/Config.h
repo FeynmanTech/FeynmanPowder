@@ -27,6 +27,10 @@
 #define MOD_MINOR_VERSION 5
 #endif
 
+#ifndef MOD_BUILD_VERSION
+#define MOD_BUILD_NUMBER 13
+#endif
+
 #ifndef MINOR_VERSION
 #define MINOR_VERSION 2
 #endif
@@ -90,7 +94,7 @@
 #define PREF_FILE "./powder.pref"
 
 #define SCRIPTSERVER "powdertoy.co.uk"
-#define UPDATESERVER "files.brilliant-minds.tk/Stocks/mod"
+#define UPDATESERVER "files.brilliant-minds.tk/~feynman"
 
 #define LOCAL_SAVE_DIR "Saves"
 
