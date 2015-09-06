@@ -1,5 +1,5 @@
 static const char *introTextData =
-	"\blFeynman's Mod - Version " MTOS(MOD_SAVE_VERSION) "." MTOS(MOD_MINOR_VERSION) " - http://powdertoy.co.uk, irc.freenode.net #powder\n"
+	"\blFeynman's Mod - Version " MTOS(MOD_SAVE_VERSION) "." MTOS(MOD_MINOR_VERSION) "." MTOS(MOD_BUILD_NUMBER) " - http://powdertoy.co.uk, irc.freenode.net #powder\n"
 	"\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F\n"
 #ifdef TPTNET
 	"\blTPTNet\n"
